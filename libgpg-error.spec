@@ -4,7 +4,7 @@
 #
 Name     : libgpg-error
 Version  : 1.19
-Release  : 9
+Release  : 10
 URL      : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.19.tar.bz2
 Source0  : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.19.tar.bz2
 Summary  : libgpg-error
