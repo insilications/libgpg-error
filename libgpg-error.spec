@@ -4,7 +4,7 @@
 #
 Name     : libgpg-error
 Version  : 1.21
-Release  : 11
+Release  : 12
 URL      : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.21.tar.bz2
 Source0  : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.21.tar.bz2
 Summary  : libgpg-error
@@ -58,6 +58,14 @@ Group: Documentation
 doc components for the libgpg-error package.
 
 
+%package extras
+Summary: extras components for the libgpg-error package.
+Group: Default
+
+%description extras
+extras components for the libgpg-error package.
+
+
 %package lib
 Summary: lib components for the libgpg-error package.
 Group: Libraries
@@ -79,6 +87,10 @@ locales components for the libgpg-error package.
 %setup -q -n libgpg-error-1.21
 
 %build
+export CFLAGS="$CFLAGS -ffunction-sections -Os "
+export FCFLAGS="$CFLAGS -ffunction-sections -Os "
+export FFLAGS="$CFLAGS -ffunction-sections -Os "
+export CXXFLAGS="$CXXFLAGS -ffunction-sections -Os "
 %configure --disable-static
 make V=1  %{?_smp_mflags}
 
@@ -103,10 +115,10 @@ rm -rf %{buildroot}
 
 %files data
 %defattr(-,root,root,-)
-/usr/share/common-lisp/source/gpg-error/gpg-error-codes.lisp
-/usr/share/common-lisp/source/gpg-error/gpg-error-package.lisp
-/usr/share/common-lisp/source/gpg-error/gpg-error.asd
-/usr/share/common-lisp/source/gpg-error/gpg-error.lisp
+%exclude /usr/share/common-lisp/source/gpg-error/gpg-error-codes.lisp
+%exclude /usr/share/common-lisp/source/gpg-error/gpg-error-package.lisp
+%exclude /usr/share/common-lisp/source/gpg-error/gpg-error.asd
+%exclude /usr/share/common-lisp/source/gpg-error/gpg-error.lisp
 
 %files dev
 %defattr(-,root,root,-)
@@ -118,6 +130,13 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc /usr/share/info/*
 %doc /usr/share/man/man1/*
+
+%files extras
+%defattr(-,root,root,-)
+/usr/share/common-lisp/source/gpg-error/gpg-error-codes.lisp
+/usr/share/common-lisp/source/gpg-error/gpg-error-package.lisp
+/usr/share/common-lisp/source/gpg-error/gpg-error.asd
+/usr/share/common-lisp/source/gpg-error/gpg-error.lisp
 
 %files lib
 %defattr(-,root,root,-)
