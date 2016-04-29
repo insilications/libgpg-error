@@ -4,7 +4,7 @@
 #
 Name     : libgpg-error
 Version  : 1.21
-Release  : 12
+Release  : 13
 URL      : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.21.tar.bz2
 Source0  : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.21.tar.bz2
 Summary  : libgpg-error
