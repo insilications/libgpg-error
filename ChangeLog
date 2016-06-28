@@ -1,3 +1,142 @@
+2016-06-15  Werner Koch  <wk@gnupg.org>
+
+	Release 1.23.
+
+	po: Update German translation.
+
+2016-06-15  Jakub Bogusz  <qboosh@pld-linux.org>
+
+	po: Update Polish translation.
+
+2016-06-15  Werner Koch  <wk@gnupg.org>
+
+	tests: Fix rare deadlock condition in t-poll.
+	* tests/t-poll.c (launch_thread): Use es_fileno before starting the
+	thread.
+
+2016-06-15  NIIBE Yutaka  <gniibe@fsij.org>
+
+	estream: Fix assertion failure due to es_flush.
+	* src/estream.c (es_writen): Set writing flag even if no data was
+	written.
+
+2016-06-15  Werner Koch  <wk@gnupg.org>
+
+	Adjust memory limit of es_fopenmem to the block size.
+	* src/estream.c (func_mem_create): Round up memory limit.
+
+2016-05-17  Werner Koch  <wk@gnupg.org>
+
+	Add GPG_ERR_SUBKEYS_EXP_OR_REV.
+
+2016-05-07  Werner Koch  <wk@gnupg.org>
+
+	syscfg: Add a powerpc and a tilgegx architecture.
+	* src/syscfg/lock-obj-pub.powerpc-unknown-linux-gnuspe.h: New.
+	* src/syscfg/lock-obj-pub.tilegx-unknown-linux-gnu.h: New.
+	* src/Makefile.am (lock_obj_pub): Add them.
+
+2016-04-25  Werner Koch  <wk@gnupg.org>
+
+	Release 1.22.
+	* configure.ac: Set LT version to C18/A18/R0.
+
+	build: Update config.{guess,sub} to 2016-04-02 and 2016-03-30.
+	* build-aux/config.guess: Update.
+	* build-aux/config.sub: Update.
+
+2016-04-25  NIIBE Yutaka  <gniibe@fsij.org>
+
+	Fix for HPPA.
+	* configure.ac (HAVE_GCC_ATTRIBUTE_ALIGNED): Revert.
+	* src/gen-posix-lock-obj.c (USE_16BYTE_ALIGNMENT): Revert.
+	* src/syscfg/lock-obj-pub.hppa-unknown-linux-gnu.h: Revert.
+
+2016-04-21  Werner Koch  <wk@gnupg.org>
+
+	w32: Add iconv functions.
+	* src/w32-add.h (gpgrt_w32_iconv_t): New.
+	(gpgrt_w32_iconv_open, gpgrt_w32_iconv_close, gpgrt_w32_iconv): New.
+	( GPGRT_ENABLE_W32_ICONV_MACROS): New
+	* src/w32-iconv.c: Change license to LGPLv2.1+.  Dispable mlang
+	feature.  Remove external DLL loading.  Simplify iconv functions.  Use
+	cleaner context struct pattern.  Use gpgrt namespace.
+	* src/gpg-error.def.in: Add new functions.
+
+2016-04-05  Werner Koch  <wk@gnupg.org>
+
+	estream,w32: Temporary fix for gpgrt_poll.
+	* src/estream.c (_gpgrt_poll) [W32]: Do not use FD_ISSET.
+
+2016-03-29  Werner Koch  <wk@gnupg.org>
+
+	estream: Prepare for new mode flag "sysopen".
+	* src/estream.c (parse_mode): Add arg "sysopen".  Adjust all callers.
+
+	estream: Use simpler names for static functions.
+	* src/estream.c: Replace all es_func_* to just func_*.
+
+	estream: Remove strange macro for better readability.
+	* src/estream.c (SET_UNLESS_NONZERO): Remove macro.
+	(es_deinitialize): Replace that macro by direct code.
+
+2016-03-24  Peter Wu  <peter@lekensteyn.nl>
+
+	Add function gpgrt_annotate_leaked_object.
+	* src/gpg-error.h.in: add gpgrt_annotate_leaked_object to support
+	  marking memory as non-leaked for Clang and GCC.
+
+2016-03-14  Kylie McClain  <somasis@exherbo.org>
+
+	syscfg: Add lock-obj-pub files for {armv5, armv6, x86_64}-musl targets.
+	* src/syscfg/lock-obj-pub.armv5-unknown-linux-musleabi.h: New.
+	* src/syscfg/lock-obj-pub.armv6-unknown-linux-musleabihf.h New.
+	* src/syscfg/lock-obj-pub.x86_64-pc-linux-musl.h: New.
+	* src/Makefile.am (lock_obj_pub): Add files.
+
+2016-03-04  NIIBE Yutaka  <gniibe@fsij.org>
+
+	Fix detecting Solaris operating system.
+	* src/gen-posix-lock-obj.c (USE_DOUBLE_FOR_ALIGNMENT): Check for
+	the macro __sun.
+
+	For Solaris, add -lrt correctly.
+	* configure.ac (LIB_SCHED_YIELD): Not avoiding defining LIB.
+
+2016-03-01  NIIBE Yutaka  <gniibe@fsij.org>
+
+	Fix for Solaris.
+	* src/gen-posix-lock-obj.c (USE_DOUBLE_FOR_ALIGNMENT): Check LP64.
+
+2016-02-26  NIIBE Yutaka  <gniibe@fsij.org>
+
+	po: Update Japanese translation.
+
+	Add support for Solaris, fixing HPPA.
+	* configure.ac (HAVE_GCC_ATTRIBUTE_ALIGNED): Remove.
+	(LIB_SCHED_YIELD): New. Check sched_yield in -lrt.
+	* src/gen-posix-lock-obj.c (USE_16BYTE_ALIGNMENT): Remove.
+	(USE_DOUBLE_FOR_ALIGNMENT, USE_LONG_DOUBLE_FOR_ALIGNMENT): New.
+	* src/syscfg/lock-obj-pub.hppa-unknown-linux-gnu.h: Update.
+
+2016-02-08  Werner Koch  <wk@gnupg.org>
+
+	build: Create an SWDB file during "make distcheck"
+	* Makefile.am (distcheck-hook): New.
+
+2016-01-19  Werner Koch  <wk@gnupg.org>
+
+	Add GPG_ERR_DB_CORRUPTED.
+
+2016-01-13  Marek Vasut  <marex@denx.de>
+
+	Add new lock-obj-pub for NIOS2.
+	src/syscfg/lock-obj-pub.nios2-unknown-linux-gnu.h: New.
+
+2015-12-14  NIIBE Yutaka  <gniibe@fsij.org>
+
+	po: Update Japanese translation.
+
 2015-12-12  Werner Koch  <wk@gnupg.org>
 
 	Release 1.21.
