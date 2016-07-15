@@ -1,3 +1,55 @@
+2016-07-14  Werner Koch  <wk@gnupg.org>
+
+	Release 1.24.
+
+2016-07-13  Werner Koch  <wk@gnupg.org>
+
+	build: Update config.{guess,sub} to {2016-05-15,2016-06-20}.
+	* build-aux/config.guess: Update.
+	* build-aux/config.sub: Update.
+
+2016-07-12  Yann E. MORIN  <yann.morin.1998@free.fr>
+
+	Add an option to disable tests.
+	* configure.ac: add an option to enable/disable building tests
+	* Makefile.am: conditionally build tests
+
+	Fix build without threads.
+	* src/gen-posix-lock-obj.c: properly guard inclusioin of pthread.h
+	* tests/t-lock.c: likewise
+	* tests/t-poll.c: likewise
+
+2016-07-05  Andre Heinecke  <aheinecke@intevation.de>
+
+	Define EWOULDBLOCK in case it is not defined.
+	* src/estream.c (EWOULDBLOCK): Define fallback.
+
+2016-07-02  Werner Koch  <wk@gnupg.org>
+
+	yat2m: Fix table formatting.
+	* doc/yat2m.c (proc_texi_cmd): Use .TQ for @itemx.  Print a .P at the
+	end of a level 0 table.
+
+2016-06-27  Werner Koch  <wk@gnupg.org>
+
+	estream: Fix bug es_fclose_snatch if a seek has been used.
+	* src/estream.c (func_mem_ioctl): Set LEN from DATA_LEN.
+
+2016-06-25  Werner Koch  <wk@gnupg.org>
+
+	w32: Silence compiler warnings about redefined macros.
+	* src/estream.c (S_IRGRP) [W32]: Protect against redefinition.
+
+	doc: Update yat2m.c.
+	* doc/yat2m.c: Update from gnupg.
+
+2016-06-24  Werner Koch  <wk@gnupg.org>
+
+	estream: Remove two compiler warning.
+	* src/estream.c (func_file_create): Remove dead assignment.
+	(doreadline): Do not decrement SPACE_LEFT before breaking the loop.
+	Add an extra block to limit the scope of that variable.
+
 2016-06-15  Werner Koch  <wk@gnupg.org>
 
 	Release 1.23.
