@@ -1,3 +1,135 @@
+2016-11-14  Werner Koch  <wk@gnupg.org>
+
+	Release 1.25.
+	* configure.ac: Set LT version to C20/A20/R0.
+
+	po: Update German translation.
+
+	Fix typo in two new error descriptions.
+
+2016-11-12  Justus Winter  <justus@g10code.com>
+
+	estream: Support 'es_poll' on Windows.
+	* src/Makefile.am (arch_sources): Add new file.
+	* src/estream.c (O_NONBLOCK): Move to 'gpgrt-int.h'.
+	(BUFFER_BLOCK_SIZE): Likewise.
+	(BUFFER_UNREAD_SIZE): Likewise.
+	(struct notify_list_s, notify_list_t): Likewise.
+	(struct _gpgrt_stream_internal, estream_internal_t): Likewise.
+	(X_POLLABLE): New macro.
+	(parse_mode): Parse keyword 'pollable', emulate O_NONBLOCK using the
+	same mechanism on Windows.
+	(_gpgrt_poll): Use the new '_gpgrt_w32_poll' on Windows.
+	* src/gpgrt-int.h (_gpgrt_functions_w32_pollable): New declaration.
+	(_gpgrt_w32_pollable_create): New prototype.
+	(_gpgrt_w32_poll): Likewise.
+	* src/w32-estream.c: New file.  This code is adapted from GPGME.
+	* tests/t-poll.c (create_pipe): Create pollable streams.
+
+	GnuPG-bug-id: 2731
+
+	estream: Track the kind of backend used.
+	* src/estream.c (struct _gpgrt_stream_internal): Add 'kind'.
+	(init_stream_obj): New parameter 'kind', initialize field.
+	(es_create): New parameter 'kind'.  Update all callers.
+	* src/gpgrt-int.h (gpgrt_stream_backend_kind_t): New type.
+
+	estream: Rework how the cookie functions are handled.
+	* src/estream.c (cookie_ioctl_function_t): Move to 'gpgrt-int.h',
+	along with the macros for the IOCTL numbers.
+	(estream_functions_mem): Use the new type and add the ioctl function.
+	(estream_functions_fd): Likewise.
+	(estream_functions_w32): Likewise.
+	(estream_functions_fp): Likewise.
+	(init_stream_object): Use the new type, and also initialize
+	'func_ioctl'.
+	(es_create): Use the new type.
+	(_gpgrt_fopen): Adapt.
+	(_gpgrt_mopen): Likewise.
+	(_gpgrt_fopenmem): Likewise.
+	(_gpgrt_fopencookie): Likewise.
+	(_gpgrt_fdopen): Likewise.
+	(_gpgrt_fpopen): Likewise.
+	(do_w32open): Likewise.
+	* src/gpgrt-int.h (struct cookie_io_functions_s): New type.
+
+	estream: Rework modestring handling.
+	* src/estream.c (X_SAMETHREAD, X_SYSOPEN): New macros.
+	(parse_mode): Rework how information flows from here to 'es_create'.
+	Instead of using an integer flag per mode, use flags.
+	(init_stream_obj): Adapt accordingly.
+	(es_create): Likewise.
+	(_gpgrt_fopen): Likewise.
+	(_gpgrt_mopen): Likewise.
+	(_gpgrt_fopenmem): Likewise.
+	(_gpgrt_fopencookie): Likewise.
+	(_gpgrt_fdopen): Likewise.
+	(_gpgrt_fpopen): Likewise.
+	(do_w32open): Likewise.
+	(_gpgrt_freopen): Likewise.
+
+2016-11-12  Werner Koch  <wk@gnupg.org>
+
+	Add new interface gpgrt_get_syscall_clamp.
+	* src/visibility.c (gpgrt_get_syscall_clamp): New.
+	* src/gpg-error.vers, src/gpg-error.def.in: Add function.
+	* src/gpg-error.h.in: Ditto.
+	* src/estream.c (_gpgrt_get_syscall_clamp): New.
+
+2016-11-11  Werner Koch  <wk@gnupg.org>
+
+	Use the syscall clamp functions also for lock functions.
+	* src/posix-lock.c (pre_lock_func, post_lock_func): New.
+	(_gpgrt_lock_set_lock_clamp): New.
+	(_gpgrt_lock_lock): Use clamp functions.
+	* src/w32-lock.c (pre_lock_func, post_lock_func): New.
+	(_gpgrt_lock_set_lock_clamp): New.
+	(_gpgrt_lock_lock): Use clamp functions.
+	* src/posix-lock.c (pre_syscall_func, post_syscall_func): New.
+	(_gpgrt_thread_set_syscall_clamp): New.
+	(_gpgrt_yield): Use clamp functions.
+	* src/w32-lock.c (pre_syscall_func, post_syscall_func): New.
+	(_gpgrt_thread_set_syscall_clamp): New.
+	(_gpgrt_yield): Use clamp functions.
+	* src/estream.c: Include lock.h and thread.h.
+	(do_deinit): Call _gpgrt_lock_set_lock_clamp.
+	(_gpgrt_set_syscall_clamp): Ditto.
+
+2016-11-11  Andre Heinecke  <aheinecke@intevation.de>
+
+	w32: Fix lock c++ narrowing conversion warning.
+	* src/syscfg/lock-obj-pub.mingw32.h (gpgrt_lock_t): Declare priv as
+	unsigned char.
+
+2016-11-10  Werner Koch  <wk@gnupg.org>
+
+	Change description of GPG_ERR_OPEN_KEYRING.
+
+2016-11-02  Werner Koch  <wk@gnupg.org>
+
+	Add error codes GPG_ERR_TOO_YOUNG and GPG_ERR_TOO_OLD.
+
+2016-10-18  Justus Winter  <justus@g10code.com>
+
+	estream: Fix modestring parsing.
+	* src/estream.c (parse_mode): Fix parsing the 'sysopen' flag.
+
+2016-10-07  Werner Koch  <wk@gnupg.org>
+
+	Add error code USER_ID_EXISTS, NAME_EXISTS, and DUP_NAME.
+
+2016-09-01  Werner Koch  <wk@gnupg.org>
+
+	Check the size of the time_t.
+	* configure.ac (AC_HEADER_TIME): New.
+	(AC_CHECK_SIZEOF): Check size of time_t.
+
+	Add error WINDOW_TOO_SMALL, WINDOW_TOO_LARGE, and MISSING_ENVVAR.
+
+2016-08-16  Werner Koch  <wk@gnupg.org>
+
+	New error code GPG_ERR_ENGINE_TOO_OLD.
+
 2016-07-14  Werner Koch  <wk@gnupg.org>
 
 	Release 1.24.
