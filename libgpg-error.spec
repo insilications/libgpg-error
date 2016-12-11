@@ -4,7 +4,7 @@
 #
 Name     : libgpg-error
 Version  : 1.25
-Release  : 17
+Release  : 18
 URL      : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.25.tar.bz2
 Source0  : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.25.tar.bz2
 Summary  : libgpg-error
@@ -125,7 +125,7 @@ rm -rf %{buildroot}
 %files dev
 %defattr(-,root,root,-)
 /usr/include/*.h
-/usr/lib64/*.so
+/usr/lib64/libgpg-error.so
 /usr/share/aclocal/*.m4
 
 %files doc
@@ -142,7 +142,8 @@ rm -rf %{buildroot}
 
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/*.so.*
+/usr/lib64/libgpg-error.so.0
+/usr/lib64/libgpg-error.so.0.20.0
 
 %files locales -f libgpg-error.lang 
 %defattr(-,root,root,-)
