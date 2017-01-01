@@ -1,3 +1,42 @@
+2016-12-21  Werner Koch  <wk@gnupg.org>
+
+	Release 1.26.
+	* configure.ac: Bump LT version to C21/A21/R0.
+
+2016-12-13  Werner Koch  <wk@gnupg.org>
+
+	New error code GPG_ERR_TRY_LATER.
+
+2016-12-12  Werner Koch  <wk@gnupg.org>
+
+	New error code GPG_ERR_DNS_TIMEOUT.
+
+	New error codes to support libdns.
+
+2016-12-02  Werner Koch  <wk@gnupg.org>
+
+	Fix NULL segv in new option --desc.
+	* src/gpg-error.c (print_desc): Shortcur for unknown symbols.
+
+	New error code GPG_ERR_INV_FLAG.
+
+	New option --desc for gpg-error.
+	* doc/errorref.txt: Remove all tabs.
+	* doc/Makefile.am (install-data-local): New to install errorref.txt.
+	(uninstall-local): New.
+	(errorref.txt.x): New.
+	* src/Makefile.am (gpg_error_CPPFLAGS): Define PKGDATADIR
+	* src/gpg-error.c (print_desc): New.
+	(show_usage): New.
+	(main): Improve option parser.  Add new option --desc.  Call
+	print_desc.
+
+2016-11-17  NIIBE Yutaka  <gniibe@fsij.org>
+
+	Fix EXEEXT for lock obj creation.
+	* src/Makefile.am (lock-obj-pub.native.h): Add EXEEXT for
+	the executable gen-posix-lock-obj.
+
 2016-11-14  Werner Koch  <wk@gnupg.org>
 
 	Release 1.25.
@@ -25,8 +64,6 @@
 	(_gpgrt_w32_poll): Likewise.
 	* src/w32-estream.c: New file.  This code is adapted from GPGME.
 	* tests/t-poll.c (create_pipe): Create pollable streams.
-
-	GnuPG-bug-id: 2731
 
 	estream: Track the kind of backend used.
 	* src/estream.c (struct _gpgrt_stream_internal): Add 'kind'.
