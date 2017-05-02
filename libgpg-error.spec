@@ -6,7 +6,7 @@
 #
 Name     : libgpg-error
 Version  : 1.27
-Release  : 21
+Release  : 22
 URL      : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.27.tar.bz2
 Source0  : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.27.tar.bz2
 Source99 : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.27.tar.bz2.sig
