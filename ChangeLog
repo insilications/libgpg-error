@@ -1,3 +1,1001 @@
+2018-03-13  Werner Koch  <wk@gnupg.org>
+
+	Release 1.28.
+	+ commit e32342397eab85fed5ef709317cc50dc7cbc41a5
+
+
+2018-02-28  NIIBE Yutaka  <gniibe@fsij.org>
+	    Karsten Merker  <merker@debian.org>
+
+	syscfg: Add a riscv64 architecture.
+	+ commit 596c0d701edeb45e0069bb74b9343e3d5b708ef0
+	* src/syscfg/lock-obj-pub.riscv64-unknown-linux-gnu.h: New.
+	* src/Makefile.am (lock_obj_pub): Add it.
+
+2018-02-21  Werner Koch  <wk@gnupg.org>
+	    Todd Zullinger
+
+	build: Document how to use git send-email.
+	+ commit 70058cd9f944d620764e57c838209afae8a58c78
+	* autogen.rc: Add patches_to.
+	* autogen.sh: Run git config sendemail.to.
+	* doc/HACKING: Describe use of git send-email.
+
+2018-02-21  Thorsten Behrens  <Thorsten.Behrens@CIB.de>
+
+	doc: clarify patch submission workflow.
+	+ commit 887530733d0486ab68ff351c4855f5450c2d50e6
+
+
+2017-12-11  Werner Koch  <wk@gnupg.org>
+
+	core: Avoid using estream_t in the public API.
+	+ commit f9a33a7f7e44a644ff4e31f7e9f1c2c1ec1f8eee
+	* src/gpg-error.h.in: Always use gpgrt_stream-t.
+
+2017-12-08  Werner Koch  <wk@gnupg.org>
+
+	core: Rename the gpgrt_log_levels enum values.
+	+ commit de167fa92d009745c51dae547990845282cbb351
+	* src/gpg-error.h.in (gprt_log_levels): Rename to GPGRT_LOGLVL.
+
+2017-11-29  Werner Koch  <wk@gnupg.org>
+
+	core: Wrap blocking system calls of the spawn functions.
+	+ commit 4acf116ba6d144c2cfa39ff54a23b8864b4ce895
+
+
+	core: Unify syscall_clamp functions.
+	+ commit adc786d034b63176b941a1ef8d996acbf8d0ea5d
+	* src/estream.c (_gpgrt_set_syscall_clamp)
+	(_gpgrt_get_syscall_clamp): Move to ...
+	* src/syscall-clamp.c: new file.
+	(_gpgrt_pre_syscall, _gpgrt_post_syscall): New.
+	* src/Makefile.am (libgpg_error_la_SOURCES): Add that file.
+	* src/estream.c: Replace the syscall wrapper with the new functions.
+	* src/posix-lock.c: Ditto.
+	* src/w32-lock.c: Ditto.
+	* src/posix-thread.c: Ditto.
+	* src/w32-thread.c: Ditto.
+
+	core: Implement the spawn functions.
+	+ commit 1865c0ba1769b407a3c504f1ab0a4278704a9fc1
+	* src/gpg-error.h.in  (GPGRT_SPAWN_NONBLOCK): New const.
+	(GPGRT_SPAWN_RUN_ASFW): New const.
+	(GPGRT_SPAWN_DETACHED): New const.
+	(gpgrt_make_pipe): New function.
+	(gpgrt_create_pipe): New macro.
+	(gpgrt_create_inbound_pipe): New macro.
+	(gpgrt_create_outbound_pipe): New macro.
+	(gpgrt_spawn_process): New function.
+	(gpgrt_spawn_process_fd): New function.
+	(gpgrt_spawn_process_detached): New function.
+	(gpgrt_wait_process): New function.
+	(gpgrt_wait_processes): New function.
+	(gpgrt_kill_process): New function.
+	(gpgrt_release_process): New function.
+	* src/gpg-error.def.in, src/gpg-error.vers: Add new functions.
+	* src/visibility.c, src/visibility.h: Add wrappers for new functions.
+	* src/spawn-posix.c: Rework to better fit the use in gpgrt.  Rename
+	all public function with a _gpgrt prefix.
+	* src/spawn-w32.c: Ditto.
+	* src/gpgrt-int.h: Likewise.
+	* src/Makefile.am (arch_sources): Add spawn-posix.c and spawn-w32.c.
+	* src/w32-add.h: Add pid_t typedef as a temporary hack.
+	* configure.ac: Check for signal.h and getrlimit.
+	(AC_FUNC_FORK): New.
+
+	Import and relicense exechelp* functions from GnuPG.
+	+ commit 8f41cc23b12485404203be5881aaaadb78696b4d
+	* src/spawn-posix.c: New.  Taken from GnuPG's exechelp-posix.c.
+	* src/spawn-w32.c: New.  Taken from GnuPG's exechelp-w32.c.
+	* src/gpgrt-int.h: Include prototypes from GnuPG's exechelp.h.
+
+2017-11-28  Werner Koch  <wk@gnupg.org>
+
+	core: Change new functions to return gpg_err_code_t.
+	+ commit 513415c71781ab400ebb01f6b4cf2984ec6b1757
+	* src/gpg-error.h.in (gpgrt_sentenv, gpgrt_mkdir, gpgrt_chdir): Change
+	return type to gpg_err_code_t.
+	* src/sysutils.c (_gpgrt_setenv): Implement that.
+	(_gpgrt_mkdir): Ditto.
+	(_gpgrt_chdir): Ditto.
+	* gpgscm/ffi.c (do_setenv, do_mkdir): Adjust for this change.
+
+	gpgscm: Some adjustments for use in gpgrt.
+	+ commit 930d27ba6b1205395add0c79139e62355a1d5b62
+	* gpgscm/Makefile.am: Remove cruft leftover from GnuPG.  Link to the
+	just build libgpg-error.
+	* gpgscm/private.h: Include gpgrt.h and provide i18n macros.
+	(xfree, xtrymalloc, xtrycalloc, xtryrealloc): New macros.
+	(xmalloc, xstrdup): New inline functions.
+	* gpgscm/main.c: Remove inclusion of gcrypt.h and gpg-error.h.  Remove
+	all other gnupg specific headers.
+	(opts, parse_arguments): Temporary comment out.
+	(main): Adjust for use with gpgrt.  Temporary comment out some stuff.
+	* gpgscm/ffi-private.h: Include local gpgrt.h instead of gpg-error.h.
+	* gpgscm/ffi.h: Ditto.
+	* gpgscm/ffi.c: Remove gpg-error.h and headers from GnuPG.
+	(do_getenv): Use gpgrt_getenv.
+	(do_setenv): Use gpgrt_setenv.
+	(do_mkdtemp): Temporary return an error.
+	(unlink_recursively): Use gpgrt_bsprintf.
+	(do_getcwd): Use gpgrt_getcwd.
+	(do_mkdir): Use gpgrt_mkdir.
+	(do_get_isotime): Temporary return an error.
+	(do_get_time): Directly use time().
+
+	core: New API functions gpgrt_mkdir, gpgrt_chdir, gpgrt_getcwd.
+	+ commit 4a2538e69dd35377bce0fb584f72322c69a111b3
+	* src/gpg-error.h.in (gpgrt_mkdir, gpgrt_chdir, gpgrt_getcwd): New.
+	* src/visibility.c, src/visibility.h: Add wrappers.
+	* src/gpg-error.vers, src/gpg-error.def.in: Add them.
+	* src/sysutils.c (modestr_to_mode): New.
+	(_gpgrt_mkdir, _gpgrt_chdir, _gpgrt_getcwd): New.
+	* m4/gnupg-misc.m4: New.
+	* m4/Makefile.am (EXTRA_DIST): Add new M4 file.
+	* configure.ac: Call new GNUPG_FUNC_MKDIR_TAKES_ONE_ARG.
+	(AC_CHECK_FUNCS): Add stat.
+
+	core: Prepare to build with gpgscm.
+	+ commit 241e9a73891fcd12f124aab1a299c2cf4f8eebc4
+	* configure.ac: New option --enable-gpgscm.  Create gpgscm/Makefile.
+	(GPGRT_ENABLE_LOG_MACROS): Define.
+	* Makefile.am (SUBDIRS): Add gpgscm
+	* src/logging.c (_gpgrt_logv_clock): Do not use the log_debug macro.
+
+	core: New API functions gpgrt_getenv and gpgrt_setenv.
+	+ commit b67daca506991507cea9d383df7faf95117e58a6
+	* src/gpg-error.h.in (gpgrt_getenv, gpgrt_setenv): New.
+	(gpgrt_unsetenv): New macro.
+	* src/gpg-error.vers, src/gpg-error.def.in: Add them.
+	* src/visibility.c (gpgrt_getenv, gpgrt_setenv): New.
+	* src/visibility.h: Add them.
+	* src/sysutils.c: Include string.h and on Windows windows.h.
+	(_gpgrt_getenv): New.
+	(_gpgrt_setenv): New.
+
+2017-11-27  Werner Koch  <wk@gnupg.org>
+
+	core: Install new files gpgrt.m4 and gpgrt-config.
+	+ commit 97b0881216af24f2a46c11650e23691cff9cb12a
+	* src/gpgrt.m4: New.  Bascially a copy of libgpg-error.m4
+	* src/gpg-error-config.in: Decide which name to print.
+	* src/Makefile.am (nodist_bin_SCRIPTS): Add gpgrt-config.
+	(m4data_DATA): Add gpgrt.m4
+	(EXTRA_DIST): Add gpgrt.m4.
+	(BUILT_SOURCES): Add gpgrt-config.
+	(CLEANFILES): Add gpgrt-config.
+	(gpgrt-config): Create from gpg-error-config.
+
+	core: Avoid endless recursion if log_set_sink has not been used.
+	+ commit 84ebd2f34882d29510f819a797fade0297fe9ab9
+	* src/logging.c (_gpgrt_log_set_sink): Do not call gf_is_valid if the
+	default sink has been requested.
+
+	core: Add new macro log_assert to the API.
+	+ commit d1e3401013f85620f3136958be079c13ca758b20
+	* src/gpg-error.h.in (log_assert): New macro.
+
+2017-11-22  Werner Koch  <wk@gnupg.org>
+
+	core: Do not use the estream_t alias in gpg-error.h.
+	+ commit e0ef8126c20216f79b7ad147c103bb2cf2790c59
+	* src/gpg-error.h.in: Use gpgrt_stream_t in prototypes.
+
+2017-11-17  Werner Koch  <wk@gnupg.org>
+
+	w32: Avoid unused code warning.
+	+ commit a950326d20990fa33cee637d5b54d708fff585b2
+	* src/w32-estream.c (_gpgrt_w32_poll) [!ENABLE_TRACING]: Do not use
+	waitinfo.
+
+	w32: Add new API fucntion gpgrt_w32_reg_query_string.
+	+ commit b5c4a2721d7b4bd54705c53e6f294ab2ef66a6f7
+	* src/w32-reg.c: New.
+	* src/w32-add.h: Add gpgrt_w32_reg_query_string.
+	* src/visibility.c (gpgrt_w32_reg_query_string): New wrapper.
+	* src/gpg-error.def.in: Add gpgrt_w32_reg_query_string.
+	* configure.ac (ac_check_funcs): Add stpcpy.
+	* src/Makefile.am (arch_sources): Add w32-reg.c
+	(socklibs): New.
+	(libgpg_error_la_LIBADD): Add socklibs.
+	* src/gpgrt-int.h (xfree, xtrymalloc, xtrycalloc)
+	(xtryrealloc): New internal macros.
+	(_gpgrt_stpcpy, stpcpy): New replacement fucntion and macro.
+	* src/logging.c (_gpgrt_logv_internal): Use new registry query
+	function and add standard registry key.
+
+	core: New API functions gpgrt_strdup and gpgrt_strconcat.
+	+ commit 0d8d46c76a32176be440b062d2501bbb044fb99d
+	* src/visibility.c (gpgrt_strdup): New API fucntion.
+	(gpgrt_strconcat): New API fucntion.
+	* src/visibility.h: Add corresponding macros.
+	* src/gpg-error.def.in: Add them.
+	* src/gpg-error.vers: Add them.
+	* src/gpgrt-int.h (DIM): New macro.
+	* src/init.c (_gpgrt_strdup): New.
+	(_gpgrt_strconcat_core): New.
+	(_gpgrt_strconcat): New.
+
+	core: New API functions gpgrt_malloc, gpgrt_calloc, and gpgrt_realloc.
+	+ commit 80c18e1b212cc91946864db7a53da50e9f91b861
+	* src/visibility.c (gpgrt_realloc): New API function.
+	(gpgrt_malloc): New API function.
+	(gpgrt_calloc): New API function.
+	* src/visibility.h: Add corresponding macros.
+	* src/gpg-error.def.in: Add them.
+	* src/gpg-error.vers: Add them.
+	* src/init.c (_gpgrt_calloc): New.
+	* src/gpg-error.h.in: Add prototypes.
+
+	core: Add logging API.
+	+ commit 1b653e7f37e2eb2a8f590a43651eb8aecbe8756e
+	* src/visibility.c (gpgrt_get_errorcount): New API.
+	(gpgrt_inc_errorcount): New API.
+	(gpgrt_log_set_sink): New API.
+	(gpgrt_log_set_socket_dir_cb): New API.
+	(gpgrt_log_set_pid_suffix_cb): New API.
+	(gpgrt_log_set_prefix): New API.
+	(gpgrt_log_get_prefix): New API.
+	(gpgrt_log_test_fd): New API.
+	(gpgrt_log_get_fd): New API.
+	(gpgrt_log_get_stream): New API.
+	(gpgrt_log): New API.
+	(gpgrt_logv): New API.
+	(gpgrt_logv_prefix): New API.
+	(gpgrt_log_string): New API.
+	(gpgrt_log_info): New API.
+	(gpgrt_log_error): New API.
+	(gpgrt_log_fatal): New API.
+	(gpgrt_log_bug): New API.
+	(gpgrt_log_debug): New API.
+	(gpgrt_log_debug_string): New API.
+	(gpgrt_log_printf): New API.
+	(gpgrt_log_flush): New API.
+	(gpgrt_log_printhex): New API.
+	(gpgrt_log_clock): New API.
+	(_gpgrt_log_assert): New function for the ABI.
+	* src/visibility.h: Add corresponding macros.
+	* src/gpg-error.def.in: Add new functions.
+	* src/gpg-error.vers: Add new functions.
+	* src/gpg-error.h.in (GPGRT_LOG_WITH_PREFIX): New constant.
+	(GPGRT_LOG_WITH_TIME): New constant.
+	(GPGRT_LOG_WITH_PID): New constant.
+	(GPGRT_LOG_RUN_DETACHED): New constant.
+	(GPGRT_LOG_NO_REGISTRY): New constant.
+	(GPGRT_LOG_BEGIN): New enum value.
+	(GPGRT_LOG_CONT): New enum value.
+	(GPGRT_LOG_INFO): New enum value.
+	(GPGRT_LOG_WARN): New enum value.
+	(GPGRT_LOG_ERROR): New enum value.
+	(GPGRT_LOG_FATAL): New enum value.
+	(GPGRT_LOG_BUG): New enum value.
+	(GPGRT_LOG_DEBUG): New enum value.
+	(log_get_errorcount, log_inc_errorcount, log_set_file, log_set_fd)
+	(log_set_stream, log_set_socket_dir_cb, log_set_pid_suffix_cb)
+	(log_set_prefix, log_get_prefix, log_test_fd, log_get_fd)
+	(log_get_stream, log_log, log_logv, log_logv_prefix, log_string)
+	(log_bug, log_fatal, log_error, log_info, log_debug, log_debug_string)
+	(log_printf, log_printhex, log_clock)
+	(log_flush) [GPGRT_ENABLE_LOG_MACROS]: New wrapper macros.
+	(gpgrt_assert): New macro.
+	* src/gpgrt-int.h: Add prototypes for logging.c.
+	(gpgrt_assert): Redefine for internal use.
+	* src/logging.h: Remove.
+	* src/logging.c: Include gpgrt-int.h instead of the stuff from GnuPG.
+	Use _gpgrt malloc funcsions and the internal versions of the estream
+	functions.  Rename all public fucntions with a _gpgrt_ prefix.
+	(print_prefix): Return the printed length.
+	(_gpgrt_logv_internal): Ditto.
+	(_gpgrt_log_printhex): Change order of args and turn into a printf
+	like function.
+	(_gpgrt_logv_printhex): New. Take the core of the former
+	log_printhex.
+	(_gpgrt_log_clock): Turn into a printf like functions.
+	(_gpgrt_logv_clock): New.  Take the core of the former log_clock.
+
+	New configure options and macros for internal use.
+	+ commit 9c904765c9b2b75e73b196b381470f0fb2f3b458
+	* configure.ac: Add option --enable-log-clock.
+	* configure.ac: Add option --enable-werror.
+	* src/sysutils.c: New.
+	* src/Makefile.am (libgpg_error_la_SOURCES): Add sysutils.c
+	* src/gpgrt-int.h: Add internal i18n macros and hacks to make working
+	with sockets easier.
+	(es_stdin, es_stdout, es_stderr): New internal macros.
+	(snprintf): New macro.
+
+2017-10-05  Werner Koch  <wk@gnupg.org>
+
+	gpgscm: Add required configure checks.
+	+ commit 7c48edad2c782f416854eaa5c03bcf546d68eae2
+	* configure.ac: Add new checks.
+	* m4/readline.m4: New.  Taken from gnupg.
+	* m4/Makefile.am (EXTRA_DIST): Add it.
+
+2017-08-21  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Fix -Wimplicit-fallthrough warnings.
+	+ commit dda5fb3474a81047e5bd52a194640fb44e1d60ab
+	* tests/gpgscm/scheme.c (CASE): Rearrange so that the case statement
+	is at the front.
+	(Eval_Cycle): Improve fallthrough annotations.
+
+2017-08-08  Werner Koch  <wk@gnupg.org>
+
+	build: New configure option --enable-all-tests.
+	+ commit 3aa37d802ac10a38414a8cfe120de92a76968836
+	* configure.ac: New option --enable-all-tests.
+	* tests/gpgscm/ffi.c (ffi_init): New gloabl var *run-all-tests*.
+	* tests/openpgp/all-tests.scm (all-tests): Use that var instead
+	of *maintainer-mode*.
+	* Makefile.am (AM_DISTCHECK_CONFIGURE_FLAGS): Add --enable-all-tests.
+
+	gpgscm: Make the test summary stand out.
+	+ commit c2fbc80c643db372f16aed100393cd2d4de46979
+	* tests/gpgscm/tests.scm (test-pool): Add delimiter lines.
+
+2017-08-07  Justus Winter  <justus@g10code.com>
+
+	tests: Do not run all tests unless in maintainer mode.
+	+ commit d230224c38dd4b31348f7a1ad24be9e27935dc80
+	* configure.ac: Leak the maintainer mode flag into 'config.h'.
+	* tests/gpgscm/ffi.c: Pass it into the scheme environment.
+	* tests/openpgp/all-tests.scm: Only run tests against non-default
+	configurations (keyring, extended-key-format) in maintainer mode.
+
+2017-07-18  Justus Winter  <justus@g10code.com>
+
+	gpgscm,w32: Fix testing for absolute paths.
+	+ commit c4230af0e62d7c8812eaedf4e6451a6288ff5769
+	* tests/gpgscm/main.c (path_absolute_p): New function.
+	(load): Use new function.
+
+2017-07-14  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Library improvements.
+	+ commit a4dbace8c1d771bed5783aadf87a8075454e5a35
+	* tests/gpgscm/repl.scm (prompt-yes-no?): New function.
+	* tests/gpgscm/tests.scm (pathsep-split): Likewise.
+	(pathsep-join): Likewise.
+	(with-path): Use the new function.
+
+	gpgscm: Fail early if the test setup fails.
+	+ commit c67386dcd95dd6a451b861e178503b29a7b13502
+	* tests/gpgscm/tests.scm (make-environment-cache): Check status code
+	of setup script.
+
+2017-07-13  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Make loading of modules less verbose.
+	+ commit 8377569cae0764fd44701d67626b4c96f0bd8804
+	* tests/gpgscm/main.c (load): Increase logging threshold.
+
+	gpgscm: Make it impossible to catch '*interpreter-exit*'.
+	+ commit ba3164673676468472ae37f32c3964d231e8a8f8
+	* tests/gpgscm/init.scm (throw'): Make it impossible to catch
+	'*interpreter-exit*'.  This fixes 'exit' (and with it 'fail') inside
+	'catch' statements.
+
+2017-07-05  Werner Koch  <wk@gnupg.org>
+
+	syscfg: Add lock-obj-pub file for ia64-unknown-linux-gnu.
+	+ commit 0f5c3f67946fb5389df5b9963e6976b462bf5726
+	* src/syscfg/lock-obj-pub.ia64-unknown-linux-gnu.h: new.
+	* src/Makefile.am (lock_obj_pub): Add it.
+
+	yat2m: Use version from libgpg-error.
+	+ commit 0148ea8d5acde2ad5d0376fb7eaa2221e88f258a
+	* doc/yat2m.c (VERSION): Define as PACKAGE_VERSION.
+	* doc/Makefile.am (yat2m): Pass PACKAGE_VERSION with -D.
+
+	build: Install yat2m.
+	+ commit d81b1379edbc6007a89c3b2fff1b51c8dfe2e868
+	* doc/Makefile.am (install-exec-hook): New.
+	(uninstall-local): Uninstall yat2m.
+
+	yat2m: Take care of SOURCE_DATE_EPOCH.
+	+ commit 5494a5728418938d2e42158bb646b07124184e64
+	* doc/yat2m.c (main): Set a default for OPT_DATE.
+
+2017-07-05  NIIBE Yutaka  <gniibe@fsij.org>
+
+	doc: minor fix for @xref.
+	+ commit 187e2ad24fb92210587beb779a1cc746821a169c
+	* doc/yat2m.c (proc_texi_cmd): Captalize "see" for xref.
+
+2017-07-05  Justus Winter  <justus@g10code.com>
+
+	doc: Implement simple '@ref'erences.
+	+ commit 55d560358f7ee4a8b68f98e051021a05d4c0bb1f
+	* doc/yat2m.c (proc_texi_cmd): Handle '@ref'.
+
+2017-06-19  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Limit the number of parallel jobs.
+	+ commit 895ae4c6b1bd2fd9758d9c2835d9a3881e57a85a
+	* ffi.c (do_wait_processes): Suppress the timeout error.
+	* tests.scm (semaphore): New definition.
+	(test-pool): Only run a bounded number of tests in parallel.
+	(test::started?): New function.
+	(run-tests-parallel): Do not report results, do not start the tests.
+	(run-tests-sequential): Adapt.
+	(run-tests): Parse the number of parallel jobs.
+
+	gpgscm: Improve option parsing.
+	+ commit b4628b4a23d7e8b55ef3f17d79ca86ae77cbc685
+	* tests/gpgscm/tests.scm (flag): Accept arguments of the form
+	'--foo=bar'.
+
+	gpgscm: Improve error handling of foreign functions.
+	+ commit f8934d091a274685c1b2a303ac2772adddd303c6
+	* tests/gpgscm/ffi.scm (ffi-fail): Do not needlessly join the error
+	message.
+
+	gpgscm: Improve error reporting.
+	+ commit f57405bea31bac1e3c8e4353aea9bb3cede1b90c
+	* tests/gpgscm/init.scm (throw'): Guard against 'args' being atomic.
+	* tests/gpgscm/scheme.c (Eval_Cycle): Remove any superfluous colons in
+	error messages.
+
+2017-05-31  Justus Winter  <justus@g10code.com>
+
+	Align 'es_poll' semantics closer with POSIX.
+	+ commit 4a9857a2b6d8a8e847638416d35398508b3291fd
+	* src/estream.c (_gpgrt_poll): Do not return early if some streams are
+	found to be ready before even polling the others.
+
+	build: Prepend the maintainer CFLAGS.
+	+ commit df1d61d5c84d984fb2d2a6f1b69c57878decf13e
+	* configure.ac: Prepend the maintainer CFLAGS making it possible to
+	override e.g. the optimization level for debugging.
+
+2017-05-30  NIIBE Yutaka  <gniibe@fsij.org>
+
+	Fix memory leak for estream.
+	+ commit 1e7203515be0b030709109e9da621642dfa20312
+	* src/estream.c (do_list_remove): Free the item.
+	(do_close): Free the buffer.
+
+2017-05-17  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Fix checking for opcode arguments.
+	+ commit d2747ce24d445ae7ef3ec4ed0cca2f30aa833e7c
+	* tests/gpgscm/scheme.c (Eval_Cycle): Update 'pcd' after dispatching
+	an instruction.
+
+2017-05-11  Justus Winter  <justus@g10code.com>
+
+	tests: Make it possible to run all tests using our infrastructure.
+	+ commit 4bc110e219b13d551c0c6c9987b7602e44715032
+	* Makefile.am (TESTS_ENVIRONMENT): New variable.
+	(check-all): New phony target to run all tests.
+	* tests/gpgme/gpgme-defs.scm (have-gpgme?): New function that tests
+	whether the GPGME test suite is available instead of exiting the
+	process.
+	* tests/gpgscm/init.scm (export): New macro.
+	* tests/gpgscm/tests.scm (run-tests): New function.
+	(load-tests): Likewise.
+	* tests/gpgme/run-tests.scm: Simplify and move the parsing of the list
+	of tests to 'all-tests.scm'.
+	* tests/gpgsm/run-tests.scm: Likewise.
+	* tests/migrations/run-tests.scm: Likewise.
+	* tests/openpgp/run-tests.scm: Likewise.
+	* tests/gpgme/Makefile.am: To select the tests to run, use the
+	variable 'TESTS'.  This harmonizes the interface with the automake
+	test suite.
+	* tests/gpgsm/Makefile.am: Likewise.
+	* tests/migrations/Makefile.am: Likewise.
+	* tests/openpgp/Makefile.am: Likewise.
+	* tests/openpgp/README: Likewise.
+	* agent/all-tests.scm: New file.
+	* common/all-tests.scm: Likewise.
+	* g10/all-tests.scm: Likewise.
+	* g13/all-tests.scm: Likewise.
+	* tests/gpgme/all-tests.scm: Likewise.
+	* tests/gpgsm/all-tests.scm: Likewise.
+	* tests/migrations/all-tests.scm: Likewise.
+	* tests/openpgp/all-tests.scm: Likewise.
+	* tests/run-tests.scm: Likewise.
+
+	tests: Move the makefile parser.
+	+ commit 197404aae66c688d004337c0aefe153ef6b10f87
+	* tests/gpgme/gpgme-defs.scm (parse-makefile, parse-makefile-expand):
+	Move...
+	* tests/gpgscm/makefile.scm: ... here.
+	* tests/gpgscm/Makefile.am (EXTRA_DIST): Add new file.
+
+	gpgscm: Make it possible to set the logfile name.
+	+ commit dd48994b0c99a4099f49ccd437a08ddff39af8a2
+	* tests/gpgscm/tests.scm (test): Only set the default log filename
+	when it has not been set before.
+
+2017-05-04  Justus Winter  <justus@g10code.com>
+
+	tests: Support tests that are expected to fail.
+	+ commit 212a0febf8bbaf735ae2e65722f39a47a1c5b122
+	* tests/gpgscm/tests.scm (test-pool): Rework reporting.  Filter using
+	the computed test status instead of the return value.  Also print the
+	new categories 'failed expectedly' and 'passed unexpectedly'.
+	(test): If a test ends with a bang (!), it is expected to fail.  Adapt
+	status, status-string, and xml accordingly.
+
+2017-05-03  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Create and re-use frame objects.
+	+ commit 272b0ad65ec4c6023d4b5a4fb2f003ada432b6e5
+	* tests/gpgscm/scheme-private.h (struct scheme): New field
+	'frame_freelist'.
+	* tests/gpgscm/scheme.c (enum scheme_types): New type 'T_FRAME'.
+	(type_to_string): Handle new type.
+	(settype): New macro.
+	(gc_disable): Make sure there is at least one frame in the free list.
+	(mark): Handle frame objects.
+	(finalize_cell): Likewise.
+	(dump_stack_initialize): Initialize free list.
+	(dump_stack_free): Simplify.
+	(frame_length): New variable.
+	(dump_stack_make_frame): New function.
+	(frame_slots): Likewise.
+	(frame_payload): New macro.
+	(dump_stack_allocate_frame): New function.
+	(dump_stack_deallocate_frame): Likewise.
+	(dump_stack_preallocate_frame): Likewise.
+	(_s_return): Unpack frame object and deallocate it.
+	(s_save): Wrap state in an frame object.
+	(dump_stack_mark): Mark the free list.
+
+	gpgscm: Merge opexe_0.
+	+ commit df499c6ee5edf0a560138640141a3abef360b4f5
+	* tests/gpgscm/scheme-private.h (struct scheme): Remove field 'op'.
+	* tests/gpgscm/scheme.c (opexe_0): Inline into 'Eval_Cycle'.
+	(_Error_1): Return the opcode to evaluate next.
+	(Error_1): Do not return, but set the opcode and goto dispatch.
+	(Error_0): Likewise.
+	(s_goto): Likewise.
+	(s_return): Likewise.
+	(s_return_enable_gc): Likewise.
+	(s_thread_to): Remove superfluous cast.
+	(_s_return): Return the opcode to evaluate next.
+	(scheme_init_custom_alloc): Adapt to removal of field 'op'.
+
+2017-04-24  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Refactor cell finalization.
+	+ commit 36e266a5cbb78560d32bc33f18f9041db1ff5080
+	* tests/gpgscm/scheme.c (finalize_cell): Use switch, return whether
+	the cell may be freed.
+	(gc): Update callsite.
+
+	gpgscm: Tweak error message display.
+	+ commit e8c896c7f9aabad6e1387f538accb54ac6b2b1cc
+	* tests/gpgscm/init.scm (throw'): If the first argument to the error
+	is a string, display it as such.
+
+	gpgscm: Fix test.
+	+ commit b67d1a3f36f2b15fb75de613942668b71cad1bd7
+	* tests/gpgscm/t-child.scm: Use 'string-length' on the string.
+
+	gpgscm: Improve syntax checking.
+	+ commit 008894eff46724d60a24879d319b427606fcafd1
+	* tests/gpgscm/scheme.c (opexe_0): Make sure closure arguments are
+	symbols.
+
+	gpgscm: Emit JUnit-style XML reports.
+	+ commit 5dc43e579ef4340c668fa7e294f5a69fef9d622e
+	* tests/gpgscm/Makefile.am (EXTRA_DIST): Add new file.
+	* tests/gpgscm/lib.scm (string-translate): New function.
+	* tests/gpgscm/main.c (main): Load new file.
+	* tests/gpgscm/tests.scm (dirname): New function.
+	(test-pool): Record execution times, emit XML report.
+	(test): Record execution times, record log file name, emit XML report.
+	(run-tests-parallel): Write XML report.
+	(run-tests-sequential): Likewise.
+	* tests/gpgscm/xml.scm: New file.
+	* tests/gpgme/Makefile.am (CLEANFILES): Add 'report.xml'.
+	* tests/gpgsm/Makefile.am: Likewise.
+	* tests/migrations/Makefile.am: Likewise.
+	* tests/openpgp/Makefile.am: Likewise.
+
+	gpgscm: Make logging less verbose and more useful.
+	+ commit a3e51fab6b30774959dc7d4d3409000fdbe1f7b3
+	* tests/gpgscm/tests.scm (call-with-io): When being verbose, include
+	the pid in the output, and avoid duplicating the command arguments.
+
+	gpgscm: Make test framework less functional.
+	+ commit aa843dbcd32c65eeac8c7c3cea4efb3ed7a94a0c
+	* tests/gpgscm/tests.scm (test-pool, tests): Previously, these methods
+	updated objects by creating new updated copies of the object being
+	manipulated.  This made the code awkward without any benefit,
+	therefore I change it to just update the object.
+
+	gpgscm: Move 'trace' and 'stringify'.
+	+ commit 763bd518b27d4e125fa3dce64417ae2aca2101d4
+	* tests/gpgscm/tests.scm (trace, stringify): Move...
+	* tests/gpgscm/lib.scm: ... here.
+
+	gpgscm: Avoid fruitless garbage collection cycles.
+	+ commit 8bda9387d5be9193fd0f484fd1272367a7422389
+	* tests/gpgscm/scheme-private.h (CELL_MINRECOVER): New macro.
+	* tests/gpgscm/scheme.c (_get_cell): Move the heuristic to get more
+	cells...
+	(gc): ... here where every caller benefits from the optimization.
+
+2017-04-19  NIIBE Yutaka  <gniibe@fsij.org>
+
+	Minor clean up.
+	+ commit a8d267a7220399f7acf69723fe1d31efd2160319
+	* src/b64dec.c (_gpgrt_b64dec_proc): Add a comment.
+	* src/estream.c (_gpgrt_fread, _gpgrt_fwrite): Use &&.
+	* src/mkheader.c (xstrdup): Use memcpy as we know length.
+
+2017-04-12  NIIBE Yutaka  <gniibe@fsij.org>
+
+	gpgscm: Fix test program.
+	+ commit e71c0d39d2fb896df85949a61811e3b19fd050d7
+	* tests/gpgscm/t-child.c (main): Fix for setmode.
+
+2017-04-11  Justus Winter  <justus@g10code.com>
+
+	tests: Fix distcheck.
+	+ commit b03bcee96fc4eb950c6ae38fd8b5af831b281f02
+	* tests/gpgscm/Makefile.am (EXTRA_DIST): Add 'gnupg.scm'.
+
+	tests: Move common functionality.
+	+ commit d9dd8135ec6e1a4b7a66bc385714b8c1beba3e96
+	* tests/openpgp/defs.scm (with-home-directory,
+	with-ephemeral-home-directory): Move...
+	* tests/gpgscm/gnupg.scm: ... to this new file.
+	* tests/gpgscm/main.c (main): Load the new file.
+
+2017-04-10  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Fix opcode dispatch.
+	+ commit afb7060de5c55976d08e0692fbffd0cc108914a0
+	* tests/gpgscm/scheme.c (opexe_0): Consider 'op', not 'sc->op'.  The
+	former is the opcode we are currently executing.
+
+	gpgscm: Mmap script files.
+	+ commit ef41f332cba624e9bca6100ebacd4fffe4e61679
+	* tests/gpgscm/main.c (load): Try to mmap the script.
+	* tests/gpgscm/scheme.c (scheme_load_memory): New function, a
+	generalization of 'scheme_load_string'.
+	* tests/gpgscm/scheme.h (scheme_load_memory): New prototype.
+
+	gpgscm: Refactor checking for opcode arguments.
+	+ commit 6c9de8ff59a9c637de944706533421dc4cf20708
+	* tests/gpgscm/scheme.c (op_code_info): Fix type, add forward
+	declaration.
+	(check_arguments): New function.
+	(Eval_cycle): Use the new function.
+
+	gpgscm: Improve syntax dispatch.
+	+ commit 173531921d133a007d30c32cec00546749d8cfbf
+	* tests/gpgscm/scheme.c (assign_syntax): Add opcode parameter, store
+	opcode in the tag.
+	(syntaxnum): Add sc parameter, retrieve opcode from tag.
+	(opexe_0): Adapt callsite.
+	(scheme_init_custom_alloc): Likewise.
+
+	gpgscm: Make tags mandatory.
+	+ commit d6c83fbb06abc99de696b3f9a0b1cb962fa05b26
+	* tests/gpgscm/opdefines.h: Make tags mandatory.
+	* tests/gpgscm/scheme.c: Likewise.
+	* tests/gpgscm/scheme.h: Likewise.
+
+	gpgscm: Add and use opcode for reversing a list in place.
+	+ commit be78c20cdd93ed295bfee1aef1e9d2e9253b779c
+	* tests/gpgscm/lib.scm (string-split-pln): Use 'reverse!'.
+	(string-rtrim): Likewise.
+	* tests/gpgscm/opdefines.h (reverse!): New opcode.
+	* tests/gpgscm/scheme.c (opexe_0): Handle new opcode.
+
+	gpgscm: Deduplicate code.
+	+ commit 8a2d1706e5d4b3d33ff349838f0c51631e32a2ce
+	* tests/gpgscm/scheme.c (oblist_add_by_name): Deduplicate.
+	(new_slot_spec_in_env): Likewise.
+
+	gpgscm: Move dispatch table into rodata.
+	+ commit 5aeeb5af96dce901a8b21613e33baed8b9331692
+	* tests/gpgscm/opdefines.h: Use 0 instead of NULL.
+	* tests/gpgscm/scheme.c (op_code_info): Use char arrays instead of
+	pointers, make arity parameters smaller.
+	(INF_ARG): Adapt.
+	(_OP_DEF): Likewise.
+	(dispatch_table): Likewise.
+	(procname): Likewise.
+	(Eval_cycle): Likewise.
+	(scheme_init_custom_alloc): Likewise.
+
+	gpgscm: Use more threaded code.
+	+ commit 49c22bd71892f47835d9e03f3bd3122a1f0b8faa
+	* tests/gpgscm/scheme.c (opexe_0): Use 's_thread_to' instead of
+	's_goto' wherever possible.
+
+	gpgscm: Remove now obsolete dispatcher function from the opcodes.
+	+ commit 6d99d2f287aa40d8add81ce892026dfe05768fd4
+	* tests/gpgscm/opdefines.h: Remove now obsolete dispatcher function
+	from the opcodes.
+	* tests/gpgscm/scheme-private.h (_OP_DEF): Adapt.
+	* tests/gpgscm/scheme.c (dispatch_func): Remove type declaration.
+	(op_code_info): Remove 'func'.
+	(_OP_DEF): Adapt.
+	(Eval_Cycle): Always call 'opexe_0'.
+
+	gpgscm: Merge 'opexe_6'.
+	+ commit c183d8f4c6cdf6b48265f01e4c007895f2626fc5
+	* tests/gpgscm/scheme.c (opexe_6): Merge into 'opexe_0'.
+	* tests/gpgscm/opdefines.h: Adapt.
+
+	gpgscm: Merge 'opexe_5'.
+	+ commit 72674f169386d68a6d0fc2ba4bc5a065435802a0
+	* tests/gpgscm/scheme.c (opexe_5): Merge into 'opexe_0'.
+	* tests/gpgscm/opdefines.h: Adapt.
+
+	gpgscm: Merge 'opexe_4'.
+	+ commit 5898ead4a99d3bc9e23859daf2cca9632d92f1f7
+	* tests/gpgscm/scheme.c (opexe_4): Merge into 'opexe_0'.
+	* tests/gpgscm/opdefines.h: Adapt.
+
+	gpgscm: Merge 'opexe_3'.
+	+ commit b13610ec7bf2bf199eb22f936bc2f2d4ac240fde
+	* tests/gpgscm/scheme.c (opexe_3): Merge into 'opexe_0'.
+	* tests/gpgscm/opdefines.h: Adapt.
+
+	gpgscm: Merge 'opexe_2'.
+	+ commit 7bc96831c7156fa07cfd55259f309ca4fa676c2e
+	* tests/gpgscm/scheme.c (opexe_2): Merge into 'opexe_0'.
+	* tests/gpgscm/opdefines.h: Adapt.
+
+	gpgscm: Merge 'opexe_1'.
+	+ commit 19a1be5ac3c9f3e26c453cf2ddc6d88af19e2d43
+	* tests/gpgscm/scheme.c (opexe_1): Merge into 'opexe_0'.
+	* tests/gpgscm/opdefines.h: Adapt.
+
+2017-04-07  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Allocate small integers in the rodata section.
+	+ commit 7cee693e31fa1196161d5fbe7149a176049735ac
+	* tests/gpgscm/Makefile.am (gpgscm_SOURCES): Add new file.
+	* tests/gpgscm/scheme-private.h (struct cell): Move number to the top
+	of the union so that we can initialize it.
+	(struct scheme): Remove 'integer_segment'.
+	* tests/gpgscm/scheme.c (initialize_small_integers): Remove function.
+	(small_integers): New variable.
+	(MAX_SMALL_INTEGER): Compute.
+	(mk_small_integer): Adapt.
+	(mark): Avoid marking objects already marked.  This allows us to run
+	the algorithm over objects in the rodata section if they are already
+	marked.
+	(scheme_init_custom_alloc): Remove initialization.
+	(scheme_deinit): Remove deallocation.
+	* tests/gpgscm/small-integers.h: New file.
+
+	gpgscm: Make global data constant when possible.
+	+ commit 9fc4e6cbe6d5d3f2dd1c61ded15e2ad42f8f9460
+	* tests/gpgscm/scheme-private.h (struct scheme): Make 'vptr' const.
+	* tests/gpgscm/scheme.c (num_zero): Statically initialize and turn
+	into constant.
+	(num_one): Likewise.
+	(charnames): Change type so that it can be stored in rodata.
+	(is_ascii_name): Adapt slightly.
+	(assign_proc): Make argument const char *.
+	(op_code_info): Make some fields const char *.
+	(tests): Make const.
+	(dispatch_table): Make const.  At least it can be made read-only after
+	relocation.
+	(Eval_Cycle): Adapt slightly.
+	(vtbl): Make const.
+
+	gpgscm: Remove arbitrary limit on number of cell segments.
+	+ commit 961f3b3a3001384d5df1d5a9963c5f67f800cd4d
+	* tests/gpgscm/scheme-private.h (struct scheme): Remove fixed-size
+	arrays for cell segments, replace them with a pointer to the new
+	'struct cell_segment' instead.
+	* tests/gpgscm/scheme.c (struct cell_segment): New definition.
+	(_alloc_cellseg): Allocate the header within the segment, return a
+	pointer to the header.
+	(_dealloc_cellseg): New function.
+	(alloc_cellseg): Insert the segments into a list.
+	(_get_cell): Allocate a new segment if less than a quarter of
+	CELL_SIGSIZE is recovered during garbage collection.
+	(initialize_small_integers): Adapt callsite.
+	(gc): Walk the list of segments.
+	(scheme_init_custom_alloc): Remove initialization of removed field.
+	(scheme_deinit): Adapt deallocation.
+
+	gpgscm: Fix compact vector encoding.
+	+ commit a493ad44b6a67026aeae08d25575fee8c0f137b4
+	* tests/gpgscm/scheme-private.h (struct cell): Use uintptr_t for
+	'_flags'.  This way, '_flags' has the size of a machine word.
+
+2017-04-06  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Avoid mutating integer.
+	+ commit 00de0fd1cebd89330765470bbb6e1e8bf5f3dfc9
+	* tests/gpgscm/scheme.c (opexe_5): Do not modify the integer in-place
+	while printing an vector.  Integer objects may be shared, so they must
+	not be mutated.
+
+	gpgscm: Initialize unused slots in vectors.
+	+ commit 54ea82c2e7e5700b9644c663142c2d46441a3f4e
+	* tests/gpgscm/scheme.c (get_vector_object): Initialize unused slots
+	at the end of vectors.
+
+2017-04-04  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Fix copying values.
+	+ commit 52d0423e48dfe4dd51dc0acbf119431701280a70
+	* tests/gpgscm/scheme.c (copy_value): New function.
+	(mk_tagged_value): Use new function.
+	(opexe_4): Likewise for OP_SAVE_FORCED.
+
+	gpgscm: Simplify get-output-string operation.
+	+ commit c9244b2eb43e0f06928b709ac35127966e1d24ce
+	* tests/gpgscm/scheme.c (opexe_4): Simplify 'get-output-string'.
+
+	gpgscm: Simplify substring operation.
+	+ commit 6900f118303962262923f9d103b802508d5f469f
+	* tests/gpgscm/scheme.c (opexe_2): Simplify 'substring'.
+
+2017-04-03  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Slightly improve the procedure dispatch.
+	+ commit 9a4283ed6aafc1e43d8f7a5fd9cef6118615f284
+	* tests/gpgscm/scheme.c (procnum): Procedures always have an integer
+	number, so we can safely use the cheaper 'ivalue_unchecked'.
+
+2017-03-23  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Make test cleanup more robust.
+	+ commit e1780b2f981d3fd48bbf2672b35f2f33152f6c32
+	* tests/gpgscm/tests.scm (mkdtemp-autoremove): New function that
+	cleans up at interpreter shutdown.
+	(run-tests-parallel): Use the new function.
+	(run-tests-sequential): Likewise.
+	(make-environment-cache): Execute setup with an temporary working
+	directory.
+
+2017-03-21  Justus Winter  <justus@g10code.com>
+
+	tests,w32: Use GetTempPath to get the path for temporary files.
+	+ commit 8835ee681f5ae92ded982b51f5808935d227b126
+	* tests/gpgscm/ffi.c (do_get_temp_path): New function.
+	(ffi_init): Make function available.
+	* tests/gpgscm/tests.scm (mkdtemp): Use the new function.
+
+	tests: Create temporary directories in '/tmp'.
+	+ commit cfc49428a427d1a140424c687cb45ba00117d443
+	* tests/gpgscm/tests.scm (mkdtemp): Create temporary directories in
+	'/tmp' on UNIX, or in '%Temp' on Windows.
+	* tests/migrations/common.scm (run-test): Turn error into a warning.
+	* tests/openpgp/defs.scm (start-agent): Likewise.
+
+2017-03-17  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Simplify hash tables.
+	+ commit 053a3f9a61a2918131b9dec60149b93861c04a51
+	* tests/gpgscm/scheme.c (oblist_add_by_name): We now always get a
+	slot.  Simplify accordingly.
+	(oblist_find_by_name): Always return the slot.
+	(vector_elem_slot): New function.
+	(new_slot_spec_in_env): We now always get a slot.  Remove parameter
+	'env'.  Simplify accordingly.
+	(find_slot_spec_in_env): Always return a slot.
+	(new_slot_in_env): Adapt callsite.
+	(opexe_0): Likewise.
+	(opexe_1): Likewise.
+	(scheme_define): Likewise.
+
+	gpgscm: Remove framework for immediate values.
+	+ commit a1ed4b6ab25f28114d8ba6f704824a456d4fdc0c
+	* tests/gpgscm/scheme.c (IMMEDIATE_TAG): Remove macro.
+	(is_immediate): Likewise.
+	(set_immediate): Likewise.
+	(clr_immediate): Likewise.
+	(enum scheme_types): Set the LSB in every value.
+	(fill_vector): Adapt.
+	(vector_elem): Likewise.
+	(set_vector_elem): Likewise.
+	(mark): Likewise.
+	(gc): Test for the LSB to tell typeflags apart from pointers stored in
+	the same memory location.
+
+2017-03-09  Justus Winter  <justus@g10code.com>
+
+	tests: Rework environment setup.
+	+ commit 14fcdcabb25d975f0f91be86b0571694fb533e7a
+	* tests/gpgscm/tests.scm (test::scm): Add a setup argument.
+	(test::binary): Likewise.
+	(run-tests-parallel): Remove setup parameter.
+	(run-tests-sequential): Likewise.
+	(make-environment-cache): New function that handles the cache
+	protocol.
+	* tests/gpgme/run-tests.scm: Adapt accordingly.
+	* tests/gpgsm/run-tests.scm: Likewise.
+	* tests/migrations/run-tests.scm: Likewise.
+	* tests/openpgp/run-tests.scm: Likewise.
+
+2017-03-08  Justus Winter  <justus@g10code.com>
+
+	build: Use macOS' compatibility macros to enable all features.
+	+ commit 5e51b642f747547c737a7abbc37e65b0f630d188
+	* configure.ac: On macOS, use the compatibility macros to expose every
+	feature of the libc.  This is the equivalent of _GNU_SOURCE on GNU
+	libc.
+
+2017-03-07  Michael Haubenwallner  <michael.haubenwallner@ssi-schaefer.com>
+
+	gpgscm: Use system strlwr if available.
+	+ commit ca3d31ec77612cecc16c376ac7c06ce09541b28e
+	* tests/gpgscm/scheme.c: Define local strlwr only when HAVE_STRLWR is
+	not defined in config.h.
+	* tests/gpgscm/scheme-config.h: Remove hack.
+
+2017-03-07  NIIBE Yutaka  <gniibe@fsij.org>
+
+	More change for common.
+	+ commit d372378d28b2504225aae6819d056330e7ac0674
+	* g10, scd, test, tools: Follow the change of removal of -Icommon.
+
+	w32: Conditionalize ISO 2022 definitions.
+	+ commit 1126c4c117a47c8ea8435ac11561d51b13f538dd
+	* src/w32-iconv.c (iso2022_SI_seq, iso2022_SO_seq) [USE_MLANG_DLL]:
+	Only for USE_MLANG_DLL.
+
+2017-03-06  Justus Winter  <justus@g10code.com>
+
+	tests: Harmonize temporary and socket directory handling.
+	+ commit 490c5d5afeaae66dc061295afbc254e57abd20c8
+	* tests/gpgscm/tests.scm (mkdtemp): Do not magically obey the
+	environment variable 'TMP', make sure to always return an absolute
+	path.
+	* tests/gpgme/Makefile.am (TMP): Drop variable.
+	(TESTS_ENVIRONMENT): Drop 'TMP'.
+	* tests/gpgme/gpgme-defs.scm (create-gpgmehome): Start the agent.  Do
+	not create private key store, the agent does that for us.
+	* tests/gpgsm/Makefile.am (TMP): Drop variable.
+	(TESTS_ENVIRONMENT): Drop 'TMP'.
+	* tests/gpgme/gpgme-defs.scm (create-gpgsmhome): Start the agent.  Do
+	not create private key store, the agent does that for us.
+	* tests/migrations/Makefile.am (TMP): Drop variable.
+	(TESTS_ENVIRONMENT): Drop 'TMP'.
+	* tests/migrations/common.scm (gpgconf): New variable.
+	(run-test): Create and remove socket directory.
+	* tests/migrations/extended-pkf.scm (src-tarball): Remove variable.
+	(setup): Remove function.
+	(trigger-migration): Likewise.
+	Use 'run-test' to execute the test.
+	* tests/migrations/from-classic.scm (src-tarball): Remove variable.
+	(setup): Remove function.
+	Use 'run-test' to execute the tests.
+	* tests/openpgp/Makefile.am (TMP): Drop variable.
+	(TESTS_ENVIRONMENT): Drop 'TMP'.
+	* tests/openpgp/README: Do not mention 'TMP'.
+	* tests/openpgp/defs.scm (with-home-directory): New macro.
+	(create-legacy-gpghome): Do not create private key store, the agent
+	does that for us.
+	(start-agent): Make sure to terminate the right agent with 'atexit'.
+
+	gpgscm: Fix creation of temporary directories.
+	+ commit 9e29af900544fe4210a72cae87be78186d03e231
+	* tests/gpgscm/ffi.c (do_mkdtemp): Use a larger buffer for the
+	template.
+
+2017-02-28  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Improve parsing.
+	+ commit 9467f3c7758864f3c025c14166c9d099bea6fe62
+	* tests/gpgscm/scheme.c (port_increment_current_line): Avoid creating
+	the same integer if the delta is zero.  This happens a lot during
+	parsing, and puts pressure on the memory allocator.
+
+	gpgscm: Fix calculating the line number.
+	+ commit 08e1cfddc94a6aae79b21d7795accf3e100a1f2f
+	* tests/gpgscm/scheme.c (opexe_5): Only increment the line number on
+	newlines.
+
 2017-02-28  Werner Koch  <wk@gnupg.org>
 
 	Release 1.27.
@@ -34,6 +1032,36 @@
 	on first use.  Init new vars.
 	(print_internal_trace_prefix): New.
 	* src/estream.c, src/w32-estream.c: Improve tracing.
+
+2017-02-28  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Track source locations in every kind of ports.
+	+ commit 9b23e71a6b41cd11b39ab1e1d18c140eaf63c3e7
+	* tests/gpgscm/scheme-private.h (struct port): Move location
+	information out of the union.
+	* tests/gpgscm/scheme.c (mark): All ports need marking now.
+	(gc): Likewise all ports on the load stack.
+	(port_clear_location): Adapt accordingly.  Also, add an empty function
+	for !SHOW_ERROR_LINE.
+	(port_increment_current_line): Likewise.
+	(port_reset_current_line): Drop function in favor of...
+	(port_init_location): ... this new function.
+	(file_push): Simplify.
+	(file_pop): Likewise.
+	(port_rep_from_filename): Likewise.
+	(port_rep_from_file): Likewise.
+	(port_rep_from_string): Also initialize the location.
+	(port_rep_from_scratch): Likewise.
+	(port_close): Simplify and generalize.
+	(skipspace): Likewise.
+	(token): Likewise.
+	(_Error_1): Generalize.
+	(opexe_5): Likewise.
+	(scheme_deinit): Simplify and generalize.
+	(scheme_load_named_file): Likewise.
+	(scheme_load_string): Also initialize the location.
+
+2017-02-28  Werner Koch  <wk@gnupg.org>
 
 	w32: Fix gpgrt_poll for Windows.
 	+ commit 07d5bd918d2185f79c7d61d56ee7f3090b6f5dcd
@@ -109,6 +1137,30 @@
 	+ commit 3a2ee6df5911728938a2fb56237b08f790841a0c
 
 
+2017-02-17  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Guard use of tagged expressions.
+	+ commit 86082852350810afa548c607241df95f9cac777a
+	* tests/gpgscm/init.scm (vm-history-print): Check that the tag added
+	to expressions when parsing source files matches the expected format.
+	* tests/gpgscm/lib.scm (assert): Likewise.
+
+2017-02-15  Justus Winter  <justus@g10code.com>
+
+	tests,build: Fix distcheck.
+	+ commit 52748cd96c70c9da01c35de10dd1627f7897d085
+	* tests/gpgscm/Makefile.am (EXTRA_DIST): Add 'time.scm'.
+
+	tests: Check expiration times of created keys.
+	+ commit b2db15dfe894a27246236ed416c8e2c2fc0e73c4
+	* tests/gpgscm/ffi.c (do_get_time): New function.
+	(ffi_init): Expose new function.
+	* tests/gpgscm/ffi.scm (get-time): Document new function.
+	* tests/gpgscm/time.scm: New file.
+	* tests/openpgp/quick-key-manipulation.scm: Use the new facilities to
+	check the expiration times of created keys.
+	* tests/openpgp/tofu.scm: Use the new module.
+
 2017-02-02  NIIBE Yutaka  <gniibe@fsij.org>
 
 	syscfg: Add a sh3 architecture.
@@ -131,6 +1183,96 @@
 	* src/gpgrt-int.h: Add Base64 internal functions.
 	* tests/Makefile.am (TESTS): Add t-b64dec.
 	* tests/t-b64dec.c: New.
+
+2017-01-31  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Tune the hash tables.
+	+ commit 1c99db04ed62d395c1c88171ef147a580e0bb4ab
+	* tests/gpgscm/scheme.c (oblist_initial_value): Increase the size of
+	the hash table based on the number of symbols used after initializing
+	the interpreter.
+	(new_frame_in_env): Increase the size of the hash table based on the
+	number of variables in the global environement.
+
+	gpgscm: Optimize environment lookups and insertions.
+	+ commit fa2363d9d903dfc9885f7d2f290fb4d7738bb737
+	* tests/gpgscm/scheme.c (pointercmp): New function.
+	(new_slot_spec_in_env): Add and use slot for insertions.
+	(find_slot_spec_in_env): New variant of 'find_slot_in_env' that
+	returns the slot on failures.
+	(find_slot_in_env): Express using the new function.
+	(new_slot_in_env): Update callsite.
+	(opexe_0): Optimize lookup-or-insert.
+	(opexe_1): Likewise.
+	(scheme_define): Likewise.
+
+	gpgscm: Fix build with list environments.
+	+ commit e982432ba66652bc9bc16e334e1d4d184e1b68bd
+	* tests/gpgscm/scheme.c (new_slot_spec_in_env): Provide preallocation
+	inforomation if USE_ALIST_ENV.
+
+	gpgscm: Optimize symbol lookups and insertions.
+	+ commit d374a1271326e503bd7cabe11cf5fd10a970d9fc
+	* tests/gpgscm/scheme.c (oblist_find_by_name): Keep the list of
+	symbols sorted, return the slot where a new symbol must be inserted on
+	lookup failures.
+	(oblist_add_by_name): Add the new symbol at the given slot.
+	(mk_symbol): Adjust callsite.
+	(gensym): Likewise.
+	(assign_syntax): Likewise.
+
+	gpgscm: Fix build with object list.
+	+ commit 85f6f60197fe56c90b663fb34db4cddf62c28c1b
+	* tests/gpgscm/scheme.c (oblist_add_by_name): Provide preallocation
+	information if USE_OBJECT_LIST.
+
+	gpgscm: Remove unused functions.
+	+ commit 92e929d4b91cbb5e36d6cb89aabf2211a7185a65
+	* tests/gpgscm/scheme.c (check_cell_alloced): Remove function.
+	(check_range_alloced): Likewise.
+
+2017-01-30  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Use a compact vector representation.
+	+ commit 5809edef40acf1f8f0e71b69dcb10e1d5464f2a5
+	* tests/gpgscm/scheme-private.h (struct cell): Add a compact vector
+	representation.
+	* tests/gpgscm/scheme.c (vector_length): Use new representation.
+	(vector_size): New macro.
+	(get_vector_object): Use the new representation.
+	(fill_vector): Likewise.
+	(vector_elem): Likewise.
+	(set_vector_elem): Likewise.
+	(mark): Likewise.
+	(gc): Likewise.  Be careful not to confuse immediate values for type
+	flags.
+	(finalize_cell): Vectors now require finalization.
+
+	gpgscm: Provide framework for immediate values.
+	+ commit e1dc204ac465498436f463d419b9583011026807
+	* tests/gpgscm/scheme.c (IMMEDIATE_TAG): New macro.
+	({is,set,clr}_immediate): Likewise.
+	(enum scheme_types): Make type tags disjoint from immediate values.
+	(TYPE_BITS): We need one more bit now.
+	(ADJ,T_MASKTYPE): Compute values.
+
+	gpgscm: Fix setting the line of the first gc reservation.
+	+ commit c587e6a038fc532df064eec7bea2ad1db31238ad
+	* tests/gpgscm/scheme.c (_gc_disable): Negate guard.
+
+	gpgscm: Introduce macro for the vector length.
+	+ commit e2caaa957b56f20cfe09bc6ca5a595b37a860b51
+	* tests/gpgscm/scheme.c (vector_length): New macro.
+	(get_vector_object): Use the new macro.
+	(oblist_add_by_name): Likewise.
+	(oblist_find_by_name): Likewise.
+	(oblist_all_symbols): Likewise.
+	(mk_vector): Likewise.
+	(mark): Likewise.
+	(new_slot_spec_in_env): Likewise.
+	(find_slot_spec_in_env): Likewise.
+	(opexe_2): Likewise.
+	(opexe_5): Likewise.
 
 2017-01-19  Werner Koch  <wk@gnupg.org>
 
@@ -164,11 +1306,110 @@
 	+ commit 704c31992e8716bbe61e6d5751e125a64badeef0
 	* src/gpg-error.h.in (GPGRT_GCC_VERSION): Fix.
 
+2017-01-02  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Fail if too many arguments are given.
+	+ commit 56787d898a6911e62b35c3054a22df1a913c26cf
+	* tests/gpgscm/scheme.c (opexe_0): Enable check.
+	* tests/gpgscm/tests.scm (test::report): Remove superfluous argument.
+
+	gpgscm: Add 'finally', rework all macros.
+	+ commit 7d95db002aac773e596c551b8fcba2d983244495
+	* tests/gpgscm/init.scm (finally): New macro.
+	* tests/gpgscm/tests.scm (letfd): Rewrite.
+	(with-working-directory): Likewise.
+	(with-temporary-working-directory): Likewise.
+	(lettmp): Likewise.
+
+	gpgscm: Use boxed values for source locations.
+	+ commit 4165c9303d894179c0da3a1b12316d3df8d4ce82
+	* tests/gpgscm/scheme-private.h (struct port): Use boxed values for
+	filename and current line.  This allows us to use the same Scheme
+	object for labeling all expressions in a file.
+	* tests/gpgscm/scheme.c (file_push): Use boxed type for filename.
+	(mark): Mark location objects of port objects.
+	(gc): Mark location objects in the load stack.
+	(port_clear_location): New function.
+	(port_reset_current_line): Likewise.
+	(port_increment_current_line): Likewise.
+	(file_pop): Adapt accordingly.
+	(port_rep_from_filename): Likewise.
+	(port_rep_from_file): Likewise.
+	(port_close): Likewise.
+	(skipspace): Likewise.
+	(token): Likewise.
+	(_Error_1): Likewise.
+	(opexe_0): Likewise.
+	(opexe_5): Likewise.
+	(scheme_deinit): Likewise.
+	(scheme_load_file): Likewise.
+	(scheme_load_named_file): Likewise.
+
+2016-12-21  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Guard use of union member.
+	+ commit aa6b3449bf1b42703b4c6466d87f91620743a5d2
+	* tests/gpgscm/scheme.c (opexe_5): Check that we have a file port
+	before accessing filename.  Fixes a crash on 32-bit architectures.
+
 2016-12-21  Werner Koch  <wk@gnupg.org>
 
 	Release 1.26.
 	+ commit 82266defa39901ec9f97533623af5638a35e5a77
 	* configure.ac: Bump LT version to C21/A21/R0.
+
+2016-12-20  Justus Winter  <justus@g10code.com>
+
+	tests: Move argument parser.
+	+ commit 5f16dec938ac6e337c6ff72981285385d75ec455
+	* tests/gpgme/gpgme-defs.scm (flag): Move...
+	* tests/gpgscm/tests.scm: ... over here.
+
+2016-12-19  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Change associativity of ::.
+	+ commit 3ae0b5d9af063e7af03558be2bf8f32e5bb4e5cd
+	* tests/gpgscm/scheme.c (mk_atom): Change associativity of the ::
+	infix-operator.  This makes it possible to naturally express accessing
+	nested structures (e.g. a::b::c).
+
+	gpgscm: Display location when assertions fail.
+	+ commit b852ac097f3dfe4e62c3d27e18a22f1b9f704530
+	* tests/gpgscm/lib.scm (assert): Use location information if
+	available.
+
+	gpgscm: Make exception handling more robust.
+	+ commit 5221e0b2a3bd2dbb4f997e3c2118b176e10e116e
+	* tests/gpgscm/init.scm (throw'): Check that args is a list.
+
+2016-12-13  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Print failed and skipped tests.
+	+ commit e8c5871609dd3ff3b2aa3d21ab5c3651ba683ed7
+	* tests/gpgscm/tests.scm (test-pool::report): Print failed and skipped
+	tests at the end.
+
+	gpgscm: Generalize the test runner.
+	+ commit b1e67a725d17ff1605ba79d8bb61f37c4a48f0a5
+	* tests/gpgscm/tests.scm (test::scm) Add explicit name argument.
+	(test::binary): Likewise.  Also, add missing unquote.
+	* tests/openpgp/run-tests.scm: Adapt accordingly.
+
+	gpgscm: Move the test runner to the Scheme library.
+	+ commit 0031a4d4d8a1851f0c32ad1af2f42f59bd016001
+	* tests/openpgp/run-tests.scm: Move most of the code...
+	* tests/gpgscm/tests.scm: ... here.
+
+	gpgscm: Improve library functions.
+	+ commit f745dcab2b1789c8f64c2be4b5dcc7322212e1d2
+	* tests/gpgscm/tests.scm (absolute-path?): New function.
+	(canonical-path): Use the new function.
+	* tests/gpgscm/lib.scm (string-split-pln): New function.
+	(string-indexp, string-splitp): Likewise.
+	(string-splitn): Express using the above function.
+	(string-ltrim, string-rtrim): Fix corner case.
+	(list->string-reversed): New function.
+	(read-line): Fix performance.
 
 2016-12-13  Werner Koch  <wk@gnupg.org>
 
@@ -185,6 +1426,124 @@
 	New error codes to support libdns.
 	+ commit 56ab574c28586fccd95a08acdc9ee4962ab0db50
 
+
+2016-12-08  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Better error reporting.
+	+ commit 735c66bd2d5672de8cc7573fe9d6af4615b86fe2
+	* tests/gpgscm/ffi.scm: Move the customized exception handling and
+	atexit logic...
+	* tests/gpgscm/init.scm: ... here.
+	(throw): Record the current history.
+	(throw'): New function that is history-aware.
+	(rethrow): New function.
+	(*error-hook*): Use the new throw'.
+	* tests/gpgscm/main.c (load): Fix error handling.
+	(main): Save and use the 'sc->retcode' as exit code.
+	* tests/gpgscm/repl.scm (repl): Print call history.
+	* tests/gpgscm/scheme.c (_Error_1): Make a snapshot of the history,
+	use it to provide a accurate location of the expression causing the
+	error at runtime, and hand the history trace to the '*error-hook*'.
+	(opexe_5): Tag all lists at parse time with the current location.
+	* tests/gpgscm/tests.scm: Update calls to 'throw', use 'rethrow'.
+
+	gpgscm: Keep a history of calls for error messages.
+	+ commit 81c95b26e769a1ed4933fdf598a3df42d0416928
+	* tests/gpgscm/init.scm (vm-history-print): New function.
+	* tests/gpgscm/opdefines.h: New opcodes 'CALLSTACK_POP', 'APPLY_CODE',
+	and 'VM_HISTORY'.
+	* tests/gpgscm/scheme-private.h (struct history): New definition.
+	(struct scheme): New field 'history'.
+	* tests/gpgscm/scheme.c (gc): Mark objects in the history.
+	(history_free): New function.
+	(history_init): Likewise.
+	(history_mark): Likewise.
+	(add_mod): New macro.
+	(sub_mod): Likewise.
+	(tailstack_clear): New function.
+	(callstack_pop): Likewise.
+	(callstack_push): Likewise.
+	(tailstack_push): Likewise.
+	(tailstack_flatten): Likewise.
+	(callstack_flatten): Likewise.
+	(history_flatten): Likewise.
+	(opexe_0): New variable 'callsite', keep track of the expression if it
+	is a call, implement the new opcodes, record function applications in
+	the history.
+	(opexe_6): Implement new opcode.
+	(scheme_init_custom_alloc): Initialize history.
+	(scheme_deinit): Free history.
+	* tests/gpgscm/scheme.h (USE_HISTORY): New macro.
+
+	gpgscm: Add flag TAIL_CONTEXT.
+	+ commit 83175b317dccceb149906cda721aa33178797f3e
+	* tests/gpgscm/scheme.c (S_FLAG_TAIL_CONTEXT): New macro.  This flag
+	indicates that the interpreter is evaluating an expression in a tail
+	context (see R5RS, section 3.5).
+	(opexe_0): Clear and set the flag according to the rules layed out in
+	R5RS, section 3.5.
+	(opexe_1): Likewise.
+
+	gpgscm: Add flags to the interpreter.
+	+ commit 14d9ea4bd43e077fab4c756b513557cad76aacd2
+	* tests/gpgscm/scheme-private.h (struct scheme): Add field 'flags'.
+	* tests/gpgscm/scheme.c (S_OP_MASK): New macro.
+	(S_FLAG_MASK, s_set_flag, s_clear_flag, s_get_flag): Likewise.
+	(_s_return): Unpack the encoded opcode and flags.
+	(s_save): Encode the flags along with the opcode.  Use normal
+	integers to encode the result.
+	(scheme_init_custom_alloc): Initialize 'op' and 'flags'.
+
+	gpgscm: Implement tags.
+	+ commit 88753eea0d9b1ea40a46f3b3969d418ba75cccf9
+	* tests/gpgscm/opdefines.h: Add opcodes to create and retrieve tags.
+	* tests/gpgscm/scheme.c (T_TAGGED): New macro.
+	(mk_tagged_value): New function.
+	(has_tag): Likewise.
+	(get_tag): Likewise.
+	(mark): Mark tag.
+	(opexe_4): Implement new opcodes.
+	* tests/gpgscm/scheme.h (USE_TAGS): New macro.
+
+	gpgscm: Generalize 'for-each-p'.
+	+ commit 94e8811cb2fd0cb56b330a811d13075d54681e38
+	* tests/gpgscm/tests.scm (for-each-p): Generalize to N lists like
+	for-each.
+	(for-each-p'): Likewise.
+
+2016-12-06  Justus Winter  <justus@g10code.com>
+
+	tests: Rename 'error' to 'fail'.
+	+ commit 85613efd8d49b39c1310d84484cb1647db83b4d5
+	* tests/gpgscm/tests.scm (error): Rename to 'fail'.  'error' is a
+	primitive function (an opcode) of the TinySCHEME vm, and 'error' is
+	also defined by R6RS.  Better avoid redefining that.  Fix all call
+	sites.
+	* tests/openpgp/4gb-packet.scm: Adapt.
+	* tests/openpgp/decrypt-multifile.scm: Likewise.
+	* tests/openpgp/ecc.scm: Likewise.
+	* tests/openpgp/export.scm: Likewise.
+	* tests/openpgp/gpgtar.scm: Likewise.
+	* tests/openpgp/gpgv-forged-keyring.scm: Likewise.
+	* tests/openpgp/import.scm: Likewise.
+	* tests/openpgp/issue2015.scm: Likewise.
+	* tests/openpgp/issue2346.scm: Likewise.
+	* tests/openpgp/issue2419.scm: Likewise.
+	* tests/openpgp/key-selection.scm: Likewise.
+	* tests/openpgp/mds.scm: Likewise.
+	* tests/openpgp/multisig.scm: Likewise.
+	* tests/openpgp/setup.scm: Likewise.
+	* tests/openpgp/signencrypt.scm: Likewise.
+	* tests/openpgp/ssh-import.scm: Likewise.
+	* tests/openpgp/tofu.scm: Likewise.
+	* tests/openpgp/verify.scm: Likewise.
+
+2016-12-06  Neal H. Walfield  <neal@g10code.com>
+
+	tests: Change (interactive-shell) to start an interactive shell.
+	+ commit 0d27b63f35c1e3a36631874fd111d3df2a1d51db
+	* tests/gpgscm/tests.scm (interactive-shell): Start an interactive
+	shell.
 
 2016-12-02  Werner Koch  <wk@gnupg.org>
 
@@ -208,12 +1567,99 @@
 	(main): Improve option parser.  Add new option --desc.  Call
 	print_desc.
 
+2016-11-29  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Avoid truncating pointers.
+	+ commit 941c0efdf826717aae88ea448ec60801f74bb476
+	* tests/gpgscm/scheme.c (_alloc_cellseg): Avoid truncating pointers on
+	systems where sizeof(unsigned long) < sizeof(void *).
+
+2016-11-23  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Make 'reverse' compatible with 'reverse_in_place'.
+	+ commit 7f7869357cae0f75c5976ece12a1d94a659b904a
+	* tests/gpgscm/scheme.c (reverse): Update prototype, add terminator
+	argument.
+	(opexe_4): Update callsite.
+
+	gpgscm: Clean sweeped cells.
+	+ commit a078d448415c74ee5169d548a901d27380d933f3
+	* tests/gpgscm/scheme.c (gc): Zero typeflag and car of free cells.
+
+	gpgscm: Fix initialization of 'sink'.
+	+ commit 95db0d64ac0ccab6cf0e6d6ec25251ccb0fab9d3
+	* tests/gpgscm/scheme.c (scheme_init_custom_alloc): Also initialize
+	cdr.
+
+2016-11-22  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Refactor.
+	+ commit b18458f3dfd53627994783d0f2ad835ae70a05af
+	* tests/gpgscm/scheme.c (opexe_0): Reduce code duplication.
+
+	gpgscm: Fix property lists.
+	+ commit 08f16887de9d6f6dcb0b7a377407dbd4f541fe13
+	* tests/gpgscm/opdefines.h (put, get): Check arguments.  Also rename
+	to 'set-symbol-property' and 'symbol-property', the names used by
+	Guile, because put and get are too unspecific.
+	* tests/gpgscm/scheme.c (hasprop): Only symbols have property lists.
+	(get_property): New function.
+	(set_property): Likewise.
+	(opexe_4): Use the new functions.
+
+	gpgscm: Fix installation of error handler.
+	+ commit 185ba177abeaf2f8ad66529a42966362107a2d8b
+	* tests/gpgscm/ffi.scm: Set '*error-hook*' again so that the
+	interpreter will use our function.
+
+	gpgscm: Use a static pool of cells for small integers.
+	+ commit eca7b9bbee2986157ec6c078c998bd8a25becd8f
+	* tests/gpgscm/scheme-private.h (struct scheme): New fields for the
+	static integer cells.
+	* tests/gpgscm/scheme.c (_alloc_cellseg): New function.
+	(alloc_cellseg): Use the new function.
+	(MAX_SMALL_INTEGER): New macro.
+	(initialize_small_integers): New function.
+	(mk_small_integer): Likewise.
+	(mk_integer): Return a small integer if possible.
+	(_s_return): Do not free 'op' if it is a small integer.
+	(s_save): Use a small integer to box the opcode.
+	(scheme_init_custom_alloc): Initialize small integers.
+	(scheme_deinit): Free chunk of small integers.
+	* tests/gpgscm/scheme.h (USE_SMALL_INTEGERS): New macro.
+
+2016-11-17  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Re-enable the garbage collector in case of errors.
+	+ commit d2a75dc5ae2b172a232dad88639b15b4930b9151
+	* tests/gpgscm/scheme.c (opexe_0): Enable gc before calling 'Error_1'.
+
+	gpgscm: Fix string.
+	+ commit 63cad2c16fdd343be89b576901c8f34de7cb74bf
+	* tests/gpgscm/scheme.c (type_to_string): Fix string.
+
 2016-11-17  NIIBE Yutaka  <gniibe@fsij.org>
 
 	Fix EXEEXT for lock obj creation.
 	+ commit eeef6b8724b43e105ae2beef022fc957eb228bcf
 	* src/Makefile.am (lock-obj-pub.native.h): Add EXEEXT for
 	the executable gen-posix-lock-obj.
+
+2016-11-15  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Mark cells requiring finalization.
+	+ commit ad10069af6b0d247f27b7dbf891029eb34d264e0
+	* tests/gpgscm/scheme.c (T_FINALIZE): New macro.
+	(mk_port): Use the new macro.
+	(mk_foreign_object): Likewise.
+	(mk_counted_string): Likewise.
+	(mk_empty_string): Likewise.
+	(gc): Only call 'finalize_cell' for cells with the new flag.
+
+	gpgscm: Recover more cells.
+	+ commit dd6bd1bf2a767e22bb7c1bd470ce94527a9fae3d
+	* tests/gpgscm/scheme.c (_s_return): Recover the cell holding the
+	opcode.
 
 2016-11-14  Werner Koch  <wk@gnupg.org>
 
@@ -228,6 +1674,42 @@
 	Fix typo in two new error descriptions.
 	+ commit 80350f97e9e811b9e77b59b8fc4172043f072f42
 
+
+2016-11-14  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Avoid cell allocation overhead.
+	+ commit dc1d3a79fa3e7944ea6ef02bc968446f9aa6d648
+	* tests/gpgscm/scheme-private.h (struct scheme): New fields
+	'inhibit_gc', 'reserved_cells', and 'reserved_lineno'.
+	* tests/gpgscm/scheme.c (GC_ENABLED): New macro.
+	(USE_GC_LOCKING): Likewise.
+	(gc_reservations): Likewise.
+	(gc_reservation_failure): New function.
+	(_gc_disable): Likewise.
+	(gc_disable): New macro.
+	(gc_enable): Likewise.
+	(gc_enabled): Likewise.
+	(gc_consume): Likewise.
+	(get_cell_x): Consume reserved cell if garbage collection is disabled.
+	(_get_cell): Assert that gc is enabled.
+	(get_cell): Only record cell in the list of recently allocated cells
+	if gc is enabled.
+	(get_vector_object): Likewise.
+	(gc): Assert that gc is enabled.
+	(s_return): Add comment, adjust call to '_s_return'.
+	(s_return_enable_gc): New macro.
+	(_s_return): Add flag 'enable_gc' and re-enable gc if set.
+	(oblist_add_by_name): Use the new facilities to protect the
+	allocations.
+	(new_frame_in_env): Likewise.
+	(new_slot_spec_in_env): Likewise.
+	(s_save): Likewise.
+	(opexe_0): Likewise.
+	(opexe_1): Likewise.
+	(opexe_2): Likewise.
+	(opexe_5): Likewise.
+	(opexe_6): Likewise.
+	(scheme_init_custom_alloc): Initialize the new fields.
 
 2016-11-12  Justus Winter  <justus@g10code.com>
 
@@ -334,11 +1816,196 @@
 	+ commit bae57a21cfab25ad11c82dc6e69d82d1f2f7a415
 
 
+2016-11-10  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Recover cells from the list of recently allocated cells.
+	+ commit 1659878b827d0a4e041921e0c3a3555d39a742df
+	* tests/gpgscm/scheme.c (ok_to_freely_gc): Recover cells.
+
+	gpgscm: Recover cells used to maintain interpreter state.
+	+ commit 85388f1ef82bd0a92e94a463acfa157e6f9356f8
+	* tests/gpgscm/scheme.c (free_cell): New function.
+	(free_cons): Likewise.
+	(_s_return): Use the new function to recover cells used to save the
+	state of the interpreter in 's_save'.  This reduces the need to do a
+	garbage collection considerably.
+
+	gpgscm: Reduce opcode dispatch overhead.
+	+ commit f65fb16724712b3d6072f27b47e2658f27398dd4
+	* tests/gpgscm/scheme.c (s_thread_to): New macro.
+	(CASE): Likewise.
+	(opexe_[0-6]): Use 'CASE' instead of 'case' statements, replace
+	's_goto' with 's_thread_to' where applicable.
+
+	gpgscm: Make the compile-hook configurable.
+	+ commit a678b9fdf7d48409a32afab5b487322a7fc11e16
+	* tests/gpgscm/scheme-private.h (struct scheme): Make field
+	'COMPILE_HOOK' optional.
+	* tests/gpgscm/scheme.c (opexe_0): Fix guard.
+	(scheme_init_custom_alloc): Conditionally initialize 'COMPILE_HOOK'.
+	* tests/gpgscm/scheme.h (USE_COMPILE_HOOK): Define to 1 by default.
+
+	gpgscm: Drop obsolete commented-out code.
+	+ commit f69a754515f43037da8ac8535967cd825b220be4
+	* tests/gpgscm/scheme.c (opexe_5): Drop obsolete code.
+
+	gpgscm: Remove dubious stack implementation.
+	+ commit a6ce303f0c69542999c607309128afd6293e2e1b
+	* tests/gpgscm/scheme-private.h (struct scheme): Remove related fields.
+	* tests/gpgscm/scheme.c: Drop all !USE_SCHEME_STACK code.
+	* tests/gpgscm/scheme.h (USE_SCHEME_STACK): Remove macro.
+
+2016-11-08  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Expose seek and associated constants.
+	+ commit 13831e9cd6839e44a8e32c640589edb8bf17ef51
+	* tests/gpgscm/ffi.c (do_seek): New function.
+	(ffi_init): Expose 'seek' and 'SEEK_{SET,CUR,END}'.
+	* tests/gpgscm/lib.scm: Document the new function.
+
+	gpgscm: Fix error message.
+	+ commit d5458258299889af97e714c15e6a9b859e1a0545
+	* tests/gpgscm/ffi.c (do_wait_processes): Fix and improve error
+	messages.
+
+2016-11-07  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Generalize splice to write to multiple sinks.
+	+ commit 1edacbc5a4a0f4dee3ab82c1fda7c7b1c5874761
+	* tests/gpgscm/ffi.c (ordinal_suffix): New function.
+	(do_splice): Generalize splice to write to multiple sinks.
+	* tests/gpgscm/lib.scm (splice): Document this fact.
+
+	gpgscm: Drop 'len' argument from splice.
+	+ commit 598aeda60bc3e6d49d935927b5ec33145f7af9db
+	* tests/gpgscm/ffi.c (do_splice): Drop 'len' argument, no-one uses it.
+	* tests/gpgscm/lib.scm (splice): Document foreign function.
+
+	tests: Move environment creation and teardown into each test.
+	+ commit 1564fc3b2ff52e7e5ad9b01a24e1f399934775b8
+	* tests/gpgscm/tests.scm (log): New function.
+	* tests/openpgp/run-tests.scm (run-tests-parallel): Do not run the
+	startup and teardown scripts.
+	(run-tests-sequential): Likewise.
+	* tests/openpgp/setup.scm: Move all functions...
+	* tests/openpgp/defs.scm: ... here and make them less verbose.
+	(setup-environment): New function.
+	(setup-legacy-environment): Likewise.
+	(start-agent): Make less verbose, run 'stop-agent' at interpreter
+	exit.
+	(stop-agent): Make less verbose.
+	* tests/openpgp/finish.scm: Drop file.
+	* tests/openpgp/Makefile.am (EXTRA_DIST): Drop removed file.
+	* tests/openpgp/4gb-packet.scm: Use 'setup-environment' or
+	'setup-legacy-environment' as appropriate.
+	* tests/openpgp/armdetach.scm: Likewise.
+	* tests/openpgp/armdetachm.scm: Likewise.
+	* tests/openpgp/armencrypt.scm: Likewise.
+	* tests/openpgp/armencryptp.scm: Likewise.
+	* tests/openpgp/armor.scm: Likewise.
+	* tests/openpgp/armsignencrypt.scm: Likewise.
+	* tests/openpgp/armsigs.scm: Likewise.
+	* tests/openpgp/clearsig.scm: Likewise.
+	* tests/openpgp/conventional-mdc.scm: Likewise.
+	* tests/openpgp/conventional.scm: Likewise.
+	* tests/openpgp/decrypt-dsa.scm: Likewise.
+	* tests/openpgp/decrypt.scm: Likewise.
+	* tests/openpgp/default-key.scm: Likewise.
+	* tests/openpgp/detach.scm: Likewise.
+	* tests/openpgp/detachm.scm: Likewise.
+	* tests/openpgp/ecc.scm: Likewise.
+	* tests/openpgp/encrypt-dsa.scm: Likewise.
+	* tests/openpgp/encrypt.scm: Likewise.
+	* tests/openpgp/encryptp.scm: Likewise.
+	* tests/openpgp/export.scm: Likewise.
+	* tests/openpgp/finish.scm: Likewise.
+	* tests/openpgp/genkey1024.scm: Likewise.
+	* tests/openpgp/gpgtar.scm: Likewise.
+	* tests/openpgp/gpgv-forged-keyring.scm: Likewise.
+	* tests/openpgp/import.scm: Likewise.
+	* tests/openpgp/issue2015.scm: Likewise.
+	* tests/openpgp/issue2417.scm: Likewise.
+	* tests/openpgp/issue2419.scm: Likewise.
+	* tests/openpgp/key-selection.scm: Likewise.
+	* tests/openpgp/mds.scm: Likewise.
+	* tests/openpgp/multisig.scm: Likewise.
+	* tests/openpgp/quick-key-manipulation.scm: Likewise.
+	* tests/openpgp/seat.scm: Likewise.
+	* tests/openpgp/shell.scm: Likewise.
+	* tests/openpgp/signencrypt-dsa.scm: Likewise.
+	* tests/openpgp/signencrypt.scm: Likewise.
+	* tests/openpgp/sigs-dsa.scm: Likewise.
+	* tests/openpgp/sigs.scm: Likewise.
+	* tests/openpgp/ssh.scm: Likewise.
+	* tests/openpgp/tofu.scm: Likewise.
+	* tests/openpgp/use-exact-key.scm: Likewise.
+	* tests/openpgp/verify.scm: Likewise.
+	* tests/openpgp/version.scm: Likewise.
+	* tests/openpgp/issue2346.scm: Likewise and simplify.
+
+	gpgscm,w32: Provide schemish file handling for binary files.
+	+ commit fa82512020f8cd91c68bbf1d24a4f6bffe5385ba
+	* tests/gpgscm/lib.scm (call-with-binary-input-file): New function.
+	(call-with-binary-output-file): Likewise.
+
+	gpgscm: Add support for pseudo-random numbers.
+	+ commit 70c5f30074ec996f60f62cd09e67167da78c6d8a
+	* tests/gpgscm/ffi.c (do_getpid): New function.
+	(do_srandom): Likewise.
+	(random_scaled): Likewise.
+	(do_random): Likewise.
+	(do_make_random_string): Likewise.
+	(ffi_init): Expose the new functions.
+	* tests/gpgscm/lib.scm: Document the new functions.
+
+2016-11-04  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Fix printing strings containing zero bytes.
+	+ commit fa221a1d5272eb231393a2cc0173635a5098bb89
+	* tests/gpgscm/scheme.c (atom2str): Fix computing the length of Scheme
+	strings.  Scheme strings can contain zero bytes.
+
+	gpgscm: Implement 'atexit'.
+	+ commit 97024a0cd0e1f5262ee60bf40a91f169bcc45a23
+	* tests/gpgscm/ffi.scm (throw): Run *run-atexit-handlers* when
+	terminating the interpreter.
+	(*atexit-handlers*): New variable.
+	(*run-atexit-handlers*): New function.
+	(atexit): Likewise.
+	* tests/gpgscm/main.c (main): Run *run-atexit-handlers* at normal
+	interpreter shutdown.
+
+2016-11-03  Justus Winter  <justus@g10code.com>
+
+	gpgscm,tests: Add new functions to the test environment.
+	+ commit e4a694eb48a098c3a3983767099dcce4e9157d16
+	* tests/gpgscm/lib.scm (first, last, powerset): New functions.
+	* tests/gpgscm/tests.scm (interactive-shell): New function.
+	* tests/openpgp/Makefile.am (EXTRA_DIST): Add new file.
+	* tests/openpgp/README: Document 'interactive-shell'.
+	* tests/openpgp/shell.scm: New file.
+
+2016-11-02  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Fix inclusion of readline header.
+	+ commit 0ccc6f5ffccec23587d06e32da88fb0acd80f2c6
+	* tests/gpgscm/ffi.c: Define magic macro to prevent the completion
+	function from redefined.
+
 2016-11-02  Werner Koch  <wk@gnupg.org>
 
 	Add error codes GPG_ERR_TOO_YOUNG and GPG_ERR_TOO_OLD.
 	+ commit 49e32eed4550869644d706352d683ddba5696d4e
 
+
+2016-10-20  Justus Winter  <justus@g10code.com>
+
+	common,w32: Fix setting environment variables on Windows.
+	+ commit e7ba35f207cb06f6d0e085ab3faf68d118606655
+	* common/sysutils.c (gnupg_setenv): Also update the environment block
+	maintained by the C runtime.
+	(gnupg_unsetenv): Likewise.
+	* tests/gpgscm/ffi.c (do_setenv): Fix error handling.
 
 2016-10-18  Justus Winter  <justus@g10code.com>
 
@@ -346,11 +2013,137 @@
 	+ commit 0734f4863859257d18ca96f4b9be62be75fcffe1
 	* src/estream.c (parse_mode): Fix parsing the 'sysopen' flag.
 
+2016-10-17  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Initialize nesting stack.
+	+ commit 7a262df038f495d27e2d8ec806ea0d47c925c88b
+	* tests/gpgscm/scheme.c (scheme_init_custom_alloc): Initialize nesting
+	stack.
+
+2016-10-07  Justus Winter  <justus@g10code.com>
+
+	tests: Improve handling of Windows newlines.
+	+ commit e8db2ea9542eef0bc7b51c9f69109a056269c048
+	* tests/gpgscm/lib.scm (string-split-newlines): New function.
+	* tests/openpgp/default-key.scm: Use new function.
+	* tests/openpgp/defs.scm: Likewise.
+	* tests/openpgp/export.scm: Likewise.
+	* tests/openpgp/import.scm: Likewise.
+
+	gpgscm: Improve test of low-level functions.
+	+ commit 2e47dcf432bc26cbaa1a6ba6716ab74facd06353
+	* tests/gpgscm/t-child.c: Print large amounts of data.
+	* tests/gpgscm/t-child.scm: Test that this works.
+
+	gpgscm: Improve path handling.
+	+ commit ff00a2d792091f35380c9541ee88fbd9c0d76c43
+	* tests/gpgscm/ffi.c (ffi_init): New Scheme variable '*win32*'.
+	* tests/gpgscm/tests.scm (canonical-path): Correctly handle paths with
+	drive letter on Windows.  Use 'path-join'.
+	(path-expand): Use 'path-join'.
+
 2016-10-07  Werner Koch  <wk@gnupg.org>
 
 	Add error code USER_ID_EXISTS, NAME_EXISTS, and DUP_NAME.
 	+ commit 0c837a82207d0b19f9dabc8870ffb23d6a4ade64
 
+
+2016-10-06  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Update callsite of 'gnupg_spawn_process'.
+	+ commit bbd3be18ca9feac21963cc7d682f5a7d89fd9aba
+	* tests/gpgscm/ffi.c (do_spawn_process): Adapt to the changes to
+	'gnupg_spawn_process'.
+
+2016-10-04  Justus Winter  <justus@g10code.com>
+
+	tests,w32: Do not expose 'glob' to gpgscm.
+	+ commit 7359d7acb687d572dd0a4e40fd979566efbf4e21
+	* tests/gpgscm/ffi.c (do_glob): Remove function.
+	(ffi_init): Likewise.
+
+2016-09-19  Justus Winter  <justus@g10code.com>
+
+	tests: Refine the repl function.
+	+ commit a3b6b7643d906264b56d6fa041bcb95e96eb1898
+	* tests/gpgscm/repl.scm (repl): Add an argument 'environment'.
+	(interactive-repl): Add an optional argument 'environment'.
+
+	tests: Implement interpreter shutdown using exceptions.
+	+ commit ea399aaaf4c9de92d24ab59cdc3586608bf35698
+	* tests/gpgscm/ffi.c (ffi_init): Rename 'exit' to '_exit'.
+	* tests/gpgscm/ffi.scm (*interpreter-exit*): New variable.
+	(throw): New function.
+	(exit): New function.
+
+	tests: Correctly handle exceptions in resource handling macros.
+	+ commit ec34346129c77a7011872812567689aa09d99caa
+	* tests/gpgscm/tests.scm (letfd): Correctly release resources when an
+	exception is thrown.
+	(with-working-directory): Likewise.
+	(with-temporary-working-directory): Likewise.
+	(lettmp): Likewise.
+
+	tests: Refine exception handling.
+	+ commit 3fd08ed018f837399564896462f64af8ae389eec
+	* tests/gpgscm/init.scm (catch): Bind all arguments to '*error*' in
+	the error handler, update and fix comment.
+	(*error-hook*): Revert to original definition.
+	* tests/gpgscm/tests.scm (tr:do): Adapt accordingly.
+	* tests/openpgp/issue2419.scm: Likewise.
+
+	tests: Use descriptive temporary file names.
+	+ commit 86f421b7de364138d2d066b267b0f08a62c42a42
+	* tests/gpgscm/ffi.c (do_get_isotime): New function.
+	(ffi_init): Add parameter 'scriptname', bind new function and
+	scriptname.
+	* tests/gpgscm/ffi.h (ffi_init): Update prototype.
+	* tests/gpgscm/main.c (main): Hand in the script name.
+	* tests/gpgscm/tests.scm (mkdtemp): Use current time and script name
+	for the names of temporary directories.
+
+2016-09-19  Werner Koch  <wk@gnupg.org>
+
+	gpgscm: Fix gcrypt version check.
+	+ commit a3cdf6ba9987ec2f4b951c3b2519f6beea147126
+	* tests/gpgscm/main.c (main): Check against required and not installed
+	version.
+
+2016-09-17  Daniel Kahn Gillmor  <dkg@fifthhorseman.net>
+
+	Fix more spelling.
+	+ commit 42b61e8469179292814fea267ecd7d911396b965
+	* NEWS, acinclude.m4, agent/command-ssh.c, agent/command.c,
+	  agent/gpg-agent.c, agent/keyformat.txt, agent/protect-tool.c,
+	  common/asshelp.c, common/b64enc.c, common/recsel.c, doc/DETAILS,
+	  doc/HACKING, doc/Notes, doc/TRANSLATE, doc/dirmngr.texi,
+	  doc/faq.org, doc/gpg-agent.texi, doc/gpg.texi, doc/gpgsm.texi,
+	  doc/instguide.texi, g10/armor.c, g10/gpg.c, g10/keyedit.c,
+	  g10/mainproc.c, g10/pkclist.c, g10/tofu.c, g13/sh-cmd.c,
+	  g13/sh-dmcrypt.c, kbx/keybox-init.c, m4/pkg.m4, sm/call-dirmngr.c,
+	  sm/gpgsm.c, tests/Makefile.am, tests/gpgscm/Manual.txt,
+	  tests/gpgscm/scheme.c, tests/openpgp/gpgv-forged-keyring.scm,
+	  tests/openpgp/multisig.test, tests/openpgp/verify.scm,
+	  tests/pkits/README, tools/applygnupgdefaults,
+	  tools/gpg-connect-agent.c, tools/mime-maker.c, tools/mime-parser.c:
+	  minor spelling cleanup.
+
+2016-09-15  NIIBE Yutaka  <gniibe@fsij.org>
+
+	tests/gpgscm: Fix use of pointer.
+	+ commit 95f7320a37d3870330a2b1f3493025b4820fa767
+	* tests/gpgscm/scheme-private.h (struct scheme): Use (void *) for
+	alloc_seg.
+	* tests/gpgscm/scheme.c (alloc_cellseg): Use (void *) for cp.  Use
+	(void *) for coercion of address calculation.
+
+2016-09-06  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Fix detection of unbalanced parenthesis.
+	+ commit 36405b2d208e5ec4c2c289d99ba4e7e1a29b8321
+	* tests/gpgscm/main.c (load): Print error message.
+	* tests/gpgscm/scheme.c (opexe_0): Correctly report nesting level when
+	loading files.
 
 2016-09-01  Werner Koch  <wk@gnupg.org>
 
@@ -369,7 +2162,98 @@
 	+ commit b2640cb1f7b3b056ea4f8fe4b79d58fcd10ef93b
 
 
+2016-08-12  Daniel Kahn Gillmor  <dkg@fifthhorseman.net>
+
+	Call log_set_prefix() with human-readable labels.
+	+ commit b912b371ffc56b0e657d58e2a891f6bb1affab4b
+	* agent/preset-passphrase.c, agent/protect-tool.c, dirmngr/dirmngr.c
+	* dirmngr/t-http.c, g10/gpg.c, g10/gpgv.c, g13/g13-syshelp.c
+	* g13/g13.c, kbx/kbxutil.c, scd/scdaemon.c, sm/gpgsm.c
+	* tests/gpgscm/main.c, tools/gpg-check-pattern.c
+	* tools/gpg-connect-agent.c, tools/gpgconf.c, tools/gpgtar.c
+	* tools/symcryptrun.c: Invoke log_set_prefix() with
+	human-readable labels.
+
+2016-08-10  Justus Winter  <justus@g10code.com>
+
+	tests: Improve temporary directory handling.
+	+ commit 0b5146376ba4e6ef129ed4a0641591bafa5902f9
+	* tests/gpgscm/ffi.c (ffi_init): Rename 'mkdtemp'.
+	* tests/gpgscm/tests.scm (mkdtemp): New function that uses a sensible
+	location and template if no arguments are given.
+	(with-temporary-working-directory): Simplify accordingly.
+	(make-temporary-file): Likewise.
+	* tests/openpgp/run-tests.scm (run-tests-parallel-isolated): Likewise.
+	(run-tests-sequential-isolated): Likewise.
+
+	gpgscm: Make the name of foreign functions more unique.
+	+ commit c609b6e6b08719b86a64fb186f6eee03d0b01b16
+	* tests/gpgscm/ffi-private.h (ffi_define_function_name): Add another
+	underscore.
+
+2016-07-26  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Do not shadow common function name in catch macro.
+	+ commit d764c08a9215ab1c90a97fb019aa99ccf3721e02
+	* tests/gpgscm/init.scm (catch): Do not shadow 'exit'.
+
+	gpgscm: Make the verbose setting more useful.
+	+ commit bd958b94ea3cdafa2457fdf0dcf436458fa755f6
+	* tests/gpgscm/ffi.c (do_get_verbose): New function.
+	(do_set_verbose): Likewise.
+	(ffi_init): Turn *verbose* into a function, add *set-verbose!*.
+	* tests/gpgscm/tests.scm (call): Adapt accordingly.
+	(call-with-io): Dump output if *verbose* is high.
+	(pipe-do): Adapt accordingly.
+	* tests/openpgp/defs.scm: Set verbosity according to environment.
+	* tests/openpgp/run-tests.scm (test): Adapt accordingly.
+
+2016-07-22  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Make function more general.
+	+ commit 593c5ac8553922a7cf8055c6f3d4d3ea6d0f8cb6
+	* tests/gpgscm/tests.scm (in-srcdir): Accept more path fragments.
+
+2016-07-21  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Make assert macro more accurate.
+	+ commit 4f5e0f510d72935ed6bc37f38261efd0ca45e04b
+	* tests/gpgscm/lib.scm (assert): Print the representation of the
+	failed expression.
+
+	gpgscm: Make error message more useful.
+	+ commit bc5199d51c45e11c5d9cba828b31ced9381bd27c
+	* tests/gpgscm/scheme.c (opexe_0): Include names of missing function
+	parameters in the error message.
+
+2016-07-19  Justus Winter  <justus@g10code.com>
+
+	tests: Add test for ssh support.
+	+ commit 5851aec15309e9137603bf0e564fd5028ff742c1
+	* tests/gpgscm/tests.scm (path-expand): New function.
+	* tests/openpgp/Makefile.am (TESTS): Add new test.
+	(sample_keys): Add new keys.
+	(CLEANFILES): Clean ssh socket and control file.
+	* tests/openpgp/fake-pinentry.c (main): Add a default passphrase.
+	* tests/openpgp/gpg-agent.conf.tmpl: Enable ssh support.
+	* tests/openpgp/samplekeys/ssh-dsa.key: New file.
+	* tests/openpgp/samplekeys/ssh-ecdsa.key: Likewise.
+	* tests/openpgp/samplekeys/ssh-ed25519.key: Likewise.
+	* tests/openpgp/samplekeys/ssh-rsa.key: Likewise.
+	* tests/openpgp/ssh.scm: Likewise.
+
+2016-07-15  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Fix linking.
+	+ commit 4932ef5277957153f4d066f17feb47a4db2b923b
+	* tests/gpgscm/Makefile.am: Add -lintl.
+
 2016-07-14  Werner Koch  <wk@gnupg.org>
+
+	gpgscm: Use kludge to avoid improper use of ffi_schemify_name.
+	+ commit 95c04eca273fe9bacbbd9666fd6806e0748792ed
+	* tests/gpgscm/ffi.c (ffi_schemify_name): Use xstrdup instead of
+	strdup for now.
 
 	Release 1.24.
 	+ commit bb1269c85bb41dbb6391756a65e8bc357d82d6b6
@@ -395,6 +2279,34 @@
 	* tests/t-lock.c: likewise
 	* tests/t-poll.c: likewise
 
+2016-07-07  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Capture output of spawned processes.
+	+ commit 912977e668d59baf39464fab7e93b9a617f9706f
+	* tests/gpgscm/tests.scm (call-check): Capture stdout and stderr, and
+	return stdout if the child exited successfully, or include stderr in
+	the error.
+	* tests/openpgp/version.scm: Demonstrate this by checking the stdout.
+
+2016-07-05  Justus Winter  <justus@g10code.com>
+
+	tests: Honor environment variable 'TMP'.
+	+ commit 228b225c412573d73901e3e79b7cab64a05bb26e
+	This fixes problems with long socket names, e.g. when doing distcheck.
+
+	* tests/gpgscm/tests.scm (path-join): New function.
+	(with-temporary-working-directory): Honor 'TMP'.
+	(make-temporary-file): Likewise.
+	* tests/migrations/Makefile.am (TMP): Default to '/tmp'.
+	(TESTS_ENVIRONMENT): Set 'TMP'.
+	* tests/openpgp/Makefile.am (TMP): Default to '/tmp'.
+	(TESTS_ENVIRONMENT): Set 'TMP'.
+
+	gpgscm: Improve robustness and compatibility.
+	+ commit 1406aa0fdf349b370cc2a5b87ada557455203dd2
+	* tests/gpgscm/ffi.c (do_getenv): Avoid gccism.
+	(do_mkdtemp): Handle errors.
+
 2016-07-05  Andre Heinecke  <aheinecke@intevation.de>
 
 	Define EWOULDBLOCK in case it is not defined.
@@ -407,6 +2319,44 @@
 	+ commit 1a53a0ac4cc241a5c6d360d6259dd04afc09264c
 	* doc/yat2m.c (proc_texi_cmd): Use .TQ for @itemx.  Print a .P at the
 	end of a level 0 table.
+
+2016-06-30  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Fix reallocating string ports.
+	+ commit 27d423b785afa3458e102fa3d7c1220ec50a47fe
+	* tests/gpgscm/scheme.c (realloc_port_string): Use memcpy because
+	Scheme strings may contain 0s.
+
+	gpgscm: Free memory backing string ports.
+	+ commit f103dd1d9dd69eb0a32cf2d91e3a595082f3f41c
+	* tests/gpgscm/scheme.c (finalize_cell): Free memory backing string
+	ports.
+
+	gpgscm: Use the allocator from libgcrypt.
+	+ commit 9af66b27499646f6386ab902e75056b961192f50
+	* tests/gpgscm/main.c (main): Use the allocator from libgcrypt.
+
+2016-06-28  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Fix memory leaks.
+	+ commit b4e31c551b9205684e812e941bd974cc594cf97f
+	* tests/gpgscm/ffi-private.h (ffi_schemify_name): Fix prototype.
+	(ffi_define_function_name): Free schemified name.
+	(ffi_define_function): Likewise.
+	(ffi_define_constant): Likewise.
+	(ffi_define_variable_pointer): Likewise.
+	* tests/gpgscm/ffi.c (do_wait_processes): Free arrays.
+	(ffi_schemify_name): Fix type.
+	* tests/gpgscm/main.c (main): Free 'sc'.
+
+	gpgscm: Free file names.
+	+ commit 9368fd55602a1d36f6bf6bc3797a4f2d7a782ded
+	* tests/gpgscm/scheme.c (scheme_load_named_file): Free file name.
+
+	gpgscm: Fix buffer overflow.
+	+ commit 73b24ed0cb0ba3271e887d1044a497e53ca90b62
+	* tests/gpgscm/scheme.c (store_string): Avoid writing past allocated
+	buffer.
 
 2016-06-27  Werner Koch  <wk@gnupg.org>
 
@@ -431,6 +2381,195 @@
 	* src/estream.c (func_file_create): Remove dead assignment.
 	(doreadline): Do not decrement SPACE_LEFT before breaking the loop.
 	Add an extra block to limit the scope of that variable.
+
+2016-06-23  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Handle exceptions in the transformation monad.
+	+ commit 7b6728b7ecf7b0646db2de35625aba3b0cd0bf02
+	* tests/gpgscm/tests.scm (pipe:do): Raise errors.
+	(tr:spawn): Catch and return errors.
+	(tr:call-with-content): Likewise.
+	(tr:{open,write-to,pipe-do,assert-identity,assert-weak-identity}):
+	Adapt.
+
+	gpgscm: Add types for special objects.
+	+ commit 24df932e5fdda891760b34b7e5fccd5aba62fde8
+	* tests/gpgscm/scheme.c (enum scheme_types): Add types for boolean,
+	nil, eof, and the sink object.
+	(type_to_string): Handle new types.
+	(scheme_init_custom_alloc): Give special objects a type.
+
+	gpgscm: Fix Scheme initialization.
+	+ commit 64ab51521f1a5fabee292554d7403113898f1b28
+	This potentially causes a crash if the garbage collector marks an eof
+	object.
+
+	* tests/gpgscm/scheme.c (scheme_init_custom_alloc): Initialize
+	'EOF_OBJ'.
+
+2016-06-21  Justus Winter  <justus@g10code.com>
+
+	gpgscm: Add more file handling functions.
+	+ commit 5fee932e0ad2b2f5e876a70bdeef77c38e248a2e
+	* tests/gpgscm/ffi.c (do_glob): New function.
+	(ffi_init): Define new function.
+	* tests/gpgscm/tests.scm (basename-suffix): New function.x
+
+	gpgscm: Improve test framework.
+	+ commit d7df61081ec228db17e2bfe2e05820da8cc2d264
+	* tests/gpgscm/lib.scm (echo): Move...
+	* tests/gpgscm/tests.scm (echo): ... here.
+	(info, error, skip): And use echo here.
+	(file-exists?): New function.
+	(tr:spawn): Check that source exists and if the sink has been created.
+	(tr:call-with-content): Hand in optional arguments.
+
+	gpgscm: Use native string searching functions.
+	+ commit f4a23bc0fae621ac4b0978de4ea8f976ec6b650f
+	* tests/gpgscm/ffi-private.h: Handle character arguments.
+	* tests/gpgscm/ffi.c (do_string_index): New function.
+	(do_string_rindex): Likewise.
+	(do_string_contains): Likewise.
+	(ffi_init): Define new functions.
+	* tests/gpgscm/ffi.scm (ffi-define): New macro.
+	* tests/gpgscm/lib.scm (string-index): Use native function,
+	demonstrate behavior.
+	(string-rindex): Likewise.
+	(string-contains?): Likewise.
+	Demonstrate behavior of various other functions.
+	(read-all): Rework so that it can handle large files.
+
+	gpgscm: Improve error reporting.
+	+ commit 2bc2f95ac823f0a6449bd68dee4fc094db52f2e5
+	* tests/gpgscm/scheme.c (type_to_string): New function.
+	(Eval_Cycle): Include actual type in error message.
+
+	gpgscm: Make memory allocation failures fatal.
+	+ commit 224c171c856c662d22ba236eaa2128323bde1d08
+	* tests/gpgscm/scheme.c (Eval_Cycle): Exit if we run out of memory.
+
+2016-06-17  Werner Koch  <wk@gnupg.org>
+
+	tests: Make make distcheck work again.
+	+ commit cdd09e054a6bc4716c7847fd0779a091cbca0e8f
+	* Makefile.am (tests): Remove test code which would led to doubling
+	calls to for e.g. "make distclean".
+	* tests/Makefile.am: Typo fixes.
+	* tests/gpgscm/Makefile.am (EXTRA_DIST): Fix name of License file.
+	Add repl.scm.
+	(check): Replace by check-local because check is a standard automake
+	target.
+	* tests/openpgp/Makefile.am (TESTS_ENVIRONMENT): Replace gmake0sim by
+	automake generated macro.
+	(EXTRA_DIST): Add defs.scm
+
+	gpgscm: Silence compiler warnings.
+	+ commit d230bf3ee80cac2fe721afccab9e98b3a9be2e9a
+	* tests/gpgscm/scheme.c (mk_integer): Rename arg NUM to N.
+	(fill_vector): Ditto.
+	(mark): Rename var NUM to N.
+	(set_slot_in_env): Mark SC as unused.
+	(is_any): Mark P as unused.
+
+	Add license notices for TinySCHEME.
+	+ commit 8b1798f10c2641f79f4d770e88712be8b13dc22f
+	* tests/gpgscm/COPYING: Rename to ...
+	* tests/gpgscm/LICENSE.TinySCHEME: this.
+	* AUTHORS: Add a note about TinySCHEME.
+	* build-aux/speedo/w32/pkg-copyright.txt: Add TinySCHEME notice.
+
+2016-06-17  Justus Winter  <justus@g10code.com>
+
+	tests/gpgscm: Add a TinySCHEME-based test driver.
+	+ commit 5b417d262de048ef221ed77b2f9d2c1a843096bb
+	* configure.ac: Add new component.
+	* tests/Makefile.am: Likewise.
+	* tests/gpgscm/Makefile.am: New file.
+	* tests/gpgscm/ffi-private.h: Likewise.
+	* tests/gpgscm/ffi.c: Likewise.
+	* tests/gpgscm/ffi.h: Likewise.
+	* tests/gpgscm/ffi.scm: Likewise.
+	* tests/gpgscm/lib.scm: Likewise.
+	* tests/gpgscm/main.c: Likewise.
+	* tests/gpgscm/private.h: Likewise.
+	* tests/gpgscm/repl.scm: Likewise.
+	* tests/gpgscm/scheme-config.h: Likewise.
+	* tests/gpgscm/t-child.c: Likewise.
+	* tests/gpgscm/t-child.scm: Likewise.
+	* tests/gpgscm/tests.scm: Likewise.
+
+	tests/gpgscm: Foreign objects support for TinySCHEME.
+	+ commit 9fecd60c32aca6b32008310237d0ed524eede3d5
+	* tests/gpgscm/scheme-private.h (struct cell): Add 'foreign_object'.
+	(is_foreign_object): New prototype.
+	(get_foreign_object_{vtable,data}): Likewise.
+	* tests/gpgscm/scheme.c (enum scheme_types): New type.
+	(is_foreign_object): New function.
+	(get_foreign_object_{vtable,data}): Likewise.
+	(mk_foreign_object): Likewise.
+	(finalize_cell): Free foreign objects.
+	(atom2str): Pretty-print foreign objects.
+	(vtbl): Add new functions.
+	* tests/gpgscm/scheme.h (struct foreign_object_vtable): New type.
+	(mk_foreign_object): New prototype.
+	(struct scheme_interface): Add new functions.
+
+	Patch from Thomas Munro,
+	https://sourceforge.net/p/tinyscheme/patches/13/
+
+	tests/gpgscm: Dynamically allocate string buffer.
+	+ commit ef65b7bb2232343f72d03a0e0521de4ada3dc63b
+	* tests/gpgscm/scheme-config.h (strbuff{,_size}): Make buffer dynamic.
+	* tests/gpgscm/scheme.c (expand_strbuff): New function.
+	(putcharacter): Adapt length test.
+	(readstrexp): Expand buffer if necessary.
+	(scheme_init_custom_alloc): Initialize buffer.
+	(scheme_deinit): Free buffer.
+
+	Patch from Thomas Munro,
+	https://sourceforge.net/p/tinyscheme/patches/11/
+
+	tests/gpgscm: Make exception value available.
+	+ commit c0cf52627d8d68d23bcac60571455ffd1b052106
+	* tests/gpgscm/init.scm (throw): Hand exception value to the handler.
+	(catch): And bind it to *error*.
+
+	tests/gpgscm: Add package macro.
+	+ commit f6c0f9a420c4401d8d358049f8814799161185fa
+	* tests/gpgscm/init.scm: Add package macro from manual.
+
+	tests/gpgscm: Expose function to open streams as Scheme ports.
+	+ commit 2717b9c172f0a25094ad2e654459dbe9d7180e38
+	* tests/gpgscm/scheme.c (vtbl): Add 'port_from_file' to the vtable.
+	* tests/gpgscm/scheme.h (struct scheme_interface): New field
+	'mk_port_from_file'.
+
+	tests/gpgscm: Nicer error message.
+	+ commit 0c601ae085e95745a950a9d75ffdc8be42b3e1b2
+	* tests/gpgscm/scheme.c (opexe_0): Include the value that we tried to
+	evaluate as function-like in the error message.
+
+	tests/gpgscm: Fix error hook.
+	+ commit 16e4898a735e8f85c4ca6b44adf5a92b1a42d1af
+	* tests/gpgscm/init.scm (*error-hook*): Fix error hook so that the
+	whole error message is displayed.
+
+	tests/gpgscm: Handle unhandled enumeration values.
+	+ commit fe1c0866bc1b2c685136ea19521ffab2deb25ec3
+	* tests/gpgscm/scheme.c (opexe_{3,4}): Handle unhandled enumeration
+	values in the opcode dispatching code.
+
+	tests/gpgscm: Verbatim import of latest TinySCHEME.
+	+ commit 864992fdf695996dbac9bb344b1fdd879f735473
+	Revision 110 from svn://svn.code.sf.net/p/tinyscheme/code/trunk
+
+	* tests/gpgscm/COPYING: New file.
+	* tests/gpgscm/Manual.txt: Likewise.
+	* tests/gpgscm/init.scm: Likewise.
+	* tests/gpgscm/opdefines.h: Likewise.
+	* tests/gpgscm/scheme-private.h: Likewise.
+	* tests/gpgscm/scheme.c: Likewise.
+	* tests/gpgscm/scheme.h: Likewise.
 
 2016-06-15  Werner Koch  <wk@gnupg.org>
 
