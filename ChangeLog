@@ -1,3 +1,127 @@
+2018-04-11  Werner Koch  <wk@gnupg.org>
+
+	Release 1.29.
+	+ commit c3825327da826e434ada9abde34e6bbd7ef61737
+	* configure.ac: Bump LT version to C24/A24/R0.
+
+	core: Finalize the API for argparse.
+	+ commit e901c9fb04f5a96ba2bd49225b396ce7857a3782
+	* src/gpg-error.h.in (ARGPARSE_end): Simplify.
+	* src/argparse.c (_gpgrt_argparse_internal_s): Add field opts.
+	(deinitialize): Release new field.
+	(initialize): Add arg opts and create a copy of the option list.  Add
+	the internal options.
+	(_gpgrt_argparse): Rename arg opts to opts_orig and set new local var
+	opts.  Adjust all references to opts.
+	(find_long_option): Adjust for chnaged type of OPTS.  Re-indent.
+	(arg_parse): Remove internal option assignment.  Rename arg opts to
+	opts_orig and set new local var opts.  Adjust all references to opts.
+	(show_help): Adjust all references to opts.
+
+2018-03-27  NIIBE Yutaka  <gniibe@fsij.org>
+
+	doc: Support cross compilation for yat2m.
+	+ commit efc4769339d42a4a399c040c146cf4a29c02ea4f
+	* configure.ac (HAVE_YAT2M): New.
+	* doc/Makefile.am [CROSS_COMPILING]: Supported.
+
+2018-03-22  Werner Koch  <wk@gnupg.org>
+
+	build: Add option --git-build to autogen.sh.
+	+ commit 1b30d21c8780f5510815d4fb2523afad9fff85dc
+
+
+	yat2m: Avoid compiler warnings.
+	+ commit 30621ee4c13006d08881994c32c89f60604c0188
+	* doc/yat2m.c (evaluate_conditions): Mark args unused
+	(proc_texi_cmd): Avoid shadowing warning.
+
+	core: Add Base-64 encoder.
+	+ commit ffc8f805165a13d16ed227051c59d732117ec9d4
+	* src/b64enc.c: Change to fit into libgpg-error.
+	* src/Makefile.am: Add b64enc.c
+	* src/b64dec.c: Use xtrymalloc etc.  Always use gpg_err_code_t.
+	(_gpgrt_b64dec_start): Set decoder flag
+	(_gpgrt_b64dec_finish): Check for conflict.
+	(_gpgrt_b64state): Move to ...
+	* src/gpgrt-int.h: here.  Add new fields.
+	* src/visibility.c (gpgrt_b64enc_start): New.
+	(gpgrt_b64enc_write): New.
+	(gpgrt_b64enc_finish): New.
+	* src/gpg-error.vers, src/gpg-error.def.in: Add new functions.
+	* src/gpg-error.h.in: Ditto.
+	* src/visibility.h: Ditto.
+
+	* tests/t-b64dec.c: Remove.
+	* tests/t-b64.c: New.
+	* tests/Makefile.am (TESTS): Replace t-b64dec by t-b64.
+
+2018-03-22  NIIBE Yutaka  <gniibe@fsij.org>
+
+	doc: Fix build and installation of yat2m.
+	+ commit 4dc6d4d2067c726cdb13593bf151637319ff65e6
+	* configure.ac (YAT2M): Require it when cross compiling.
+	* doc/Makefile.am (bin_PROGRAMS): Add yat2m.
+
+2018-03-21  Werner Koch  <wk@gnupg.org>
+
+	po: Merge GnuPG's strings from argparse.c.
+	+ commit e492e0a0a73e1ea9c80f355a25f632af69d3a569
+
+
+	tools: Use gpgrt_argparse for the gpg-error tool.
+	+ commit 11ce9bc3d6fe75859e18112824ae7ec3ca0fc8df
+	* src/gpg-error.c (show_usage): Remove.
+	(my_strusage): New.
+	(main): Change to use argparse.  Also use log_error.
+
+	core: Add public function gpgrt_usage.
+	+ commit ed78ef7f06649f85f1c94c4fb2bd3f6b16fd9a63
+	* src/visibility.c (gpgrt_usage): New.
+
+	core: Add the group of argparse functions.
+	+ commit 13d6fbfd4360cb74588556a3a0058c4057d0bcf0
+	* src/visibility.c (gpgrt_argparse): New.
+	(gpgrt_strusage): New.
+	(gpgrt_set_strusage): New.
+	(gpgrt_set_usage_outfnc): New.
+	(gpgrt_set_fixed_string_mapper): New.
+	* src/gpg-error.def.in, src/gpg-error.vers: Add new functions.
+	* src/gpg-error.h.in: Add ARGPARSE macros from the former argparse.h.
+	(gpgrt_argparse_t): New.
+	(gpgrt_opt_t): New.
+	* configure.ac (AH_BOTTOM): Request argparse macros.
+	* src/Makefile.am (libgpg_error_la_SOURCES): Add argparse.c.
+	* src/argparse.h: Remove.
+	* src/argparse.c: Revamp to fit into libgpg-error.
+	(_gpgrt_argparse): New.
+	(_gpgrt_usage): Rename from usage.
+	(_gpgrt_strusage): Rename from strusage.  Define two new levels and
+	templates for three common licenses.
+	(_gpgrt_set_strusage): Rename from set_strusage.
+	(_gpgrt_set_usage_outfnc): New.
+	(_gpgrt_set_fixed_string_mapper): New.
+
+	* tests/t-argparse.c: New.
+
+2018-03-18  Werner Koch  <wk@gnupg.org>
+
+	core: Fix regression on arm64 due to invalid use of va_list.
+	+ commit 791177de023574223eddf7288eb7c5a0721ac623
+	* src/logging.c (_gpgrt_log_printhex): Provide a dummy arg instead of
+	NULL.
+
+2018-03-14  Werner Koch  <wk@gnupg.org>
+
+	core: Fix building on W64.
+	+ commit c36a60687976d98b54dac17f699dfca4918a737c
+	* src/w32-add.h: Remove hack to define pid_t.
+	* src/gpg-error.h.in: Eval macro to define pid_t.
+	* src/mkheader.c (have_sys_types_h, sys_types_h_included): New.
+	(parse_config_h): Test for sys/types.h.
+	(write_special): Protect inclusion of sys/types.h.  Define new macro
+	'define:pid_t'.
+
 2018-03-13  Werner Koch  <wk@gnupg.org>
 
 	Release 1.28.
