@@ -1,3 +1,38 @@
+2018-04-30  Werner Koch  <wk@gnupg.org>
+
+	Release 1.30.
+	+ commit cac048bf8454ade95a905f9d3840b1ec284fce20
+	* configure.ac: Bump LT version to C24/A/24/R1.
+
+	build: More release creation automation.
+	+ commit d1d4c4f8eb9830bfb671054e1558342106ba9d8d
+	* Makefile.am: Add release and sign-release targets.
+
+	core: Fix gpgrt_poll for Windows under nPth.
+	+ commit 4f45f3e0bb404b4a9787cb55ca154c6f60c1437b
+	* src/estream.c (_gpgrt_poll) [W32]: Use syscall clamp.
+
+2018-04-13  NIIBE Yutaka  <gniibe@fsij.org>
+
+	doc: Fix yat2m build for cross compilation.
+	+ commit 792877a08ca7bc9d1377161dc9af374602a394cc
+	* doc/Makefile.am: Fix target of yat2m-for-build.
+
+2018-04-12  NIIBE Yutaka  <gniibe@fsij.org>
+
+	build: Check -lsocket -lnsl for Solaris.
+	+ commit e35749023ca68de6f1f85d3072f7b36fd6f6fe7c
+	* configure.ac: Check inet_addr for -lnsl, and socket for -lsocket.
+
+2018-04-11  Damien Goutte-Gattat via Gnupg-devel  <gnupg-devel@gnupg.org>
+
+	build: Make sure version.texi is generated in time.
+	+ commit 8ef76d9373db16f1ca176f9c87c8dac2758c8b85
+	[[PGP Signed Part:Good signature from AA4373E6C82C78AD Damien Goutte-Gattat <dgouttegattat@incenp.org> (trust undefined) created at 2018-04-11T17:05:27+0200 using RSA]]
+	[1. text/plain]
+
+	* doc/Makefile.am (yat2m-stamp): Depend on version.texi.
+
 2018-04-11  Werner Koch  <wk@gnupg.org>
 
 	Release 1.29.
