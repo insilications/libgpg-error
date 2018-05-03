@@ -1,3 +1,22 @@
+2018-05-02  Werner Koch  <wk@gnupg.org>
+
+	Release 1.31.
+	+ commit 10a984d25048a09d1c489224bae866372e8066a1
+	* configure.ac: Set LT version to C24/A24/R2.
+
+2018-05-01  Werner Koch  <wk@gnupg.org>
+
+	core,w32: Avoid recursive use of npth_unprotect.
+	+ commit b26a227173e8e9b91be14f06ee781c6e214e50ff
+	* src/w32-estream.c (reader): Use standard free.
+	(writer): Ditto.
+
+2018-05-01  emma peel  <emma.peel@riseup.net>
+
+	po: new Spanish translation.
+	+ commit 7e2517a29619c35257b38aa137b6772e471d7e4e
+
+
 2018-04-30  Werner Koch  <wk@gnupg.org>
 
 	Release 1.30.

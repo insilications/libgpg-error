@@ -5,11 +5,11 @@
 # Source0 file verified with key 0x249B39D24F25E3B6
 #
 Name     : libgpg-error
-Version  : 1.30
-Release  : 26
-URL      : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.30.tar.gz
-Source0  : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.30.tar.gz
-Source99 : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.30.tar.gz.sig
+Version  : 1.31
+Release  : 27
+URL      : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.31.tar.gz
+Source0  : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.31.tar.gz
+Source99 : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.31.tar.gz.sig
 Summary  : libgpg-error
 Group    : Development/Tools
 License  : GPL-2.0 LGPL-2.0+ LGPL-2.1
@@ -113,9 +113,9 @@ locales components for the libgpg-error package.
 
 
 %prep
-%setup -q -n libgpg-error-1.30
+%setup -q -n libgpg-error-1.31
 pushd ..
-cp -a libgpg-error-1.30 build32
+cp -a libgpg-error-1.31 build32
 popd
 
 %build
@@ -123,7 +123,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1525094924
+export SOURCE_DATE_EPOCH=1525319958
 export CFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
 export FCFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
 export FFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
@@ -147,7 +147,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1525094924
+export SOURCE_DATE_EPOCH=1525319958
 rm -rf %{buildroot}
 pushd ../build32/
 %make_install32
@@ -204,12 +204,12 @@ popd
 %files lib
 %defattr(-,root,root,-)
 /usr/lib64/libgpg-error.so.0
-/usr/lib64/libgpg-error.so.0.24.1
+/usr/lib64/libgpg-error.so.0.24.2
 
 %files lib32
 %defattr(-,root,root,-)
 /usr/lib32/libgpg-error.so.0
-/usr/lib32/libgpg-error.so.0.24.1
+/usr/lib32/libgpg-error.so.0.24.2
 
 %files locales -f libgpg-error.lang
 %defattr(-,root,root,-)
