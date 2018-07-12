@@ -1,3 +1,73 @@
+2018-07-12  Werner Koch  <wk@gnupg.org>
+
+	Release 1.32.
+	+ commit 7b08307ff25b757ed2502cb2bf7893640e404ad1
+
+
+	estream: Always propagate flush event to cookie functions.
+	+ commit bd5bcd2dd19ef0b1c3d33a3a388b537ba08a4eb6
+	* src/estream.c (flush_stream): Always call cookie's flush func.
+
+2018-07-11  NIIBE Yutaka  <gniibe@fsij.org>
+
+	build: Use AX_CC_FOR_BUILD and EXEEXT.
+	+ commit 0727c394562237d7e626849eae04790264e56208
+	* configure.ac (AX_CC_FOR_BUILD): New.
+	* doc/Makefile.am: Use EXEEXT and EXEEXT_FOR_BUILD.
+	* m4/ac_prog_cc_for_build.m4: Remove.
+	* m4/ax_cc_for_build.m4: New.
+
+	doc: Now, yat2m is a standard tool.
+	+ commit f1162767e3552d05c1255497d49de15c2d94d0b4
+	* configure.ac (YAT2M, HAVE_YAT2M): Remove.
+	* doc/Makefile.am: Always use yat2m which comes with this source.
+
+2018-07-10  NIIBE Yutaka  <gniibe@fsij.org>
+
+	build: Remove version_parts in autogen.sh.
+	+ commit 302d43a130e2364ea882474088a8b0a31bc325b9
+	* autogen.rc (version_parts): Remove.
+	* autogen.sh: Determine by $micro argument.
+
+2018-07-05  Werner Koch  <wk@gnupg.org>
+
+	Remove leftover debug output from gpg-error.
+	+ commit 1ac63f630cbe1b558ebe20b746bbe4962117d36f
+	* src/gpg-error.c (main): Remove a log_debug.
+
+2018-07-05  Yuri Chornoivan  <yurchor@ukr.net>
+
+	po: Update Ukrainian translation.
+	+ commit 8a72604dc44d36790669e6e591c12cc0b6e057bd
+
+
+2018-07-05  Andre Heinecke  <aheinecke@intevation.de>
+
+	core: Initialize values in estream_format.
+	+ commit fe2f8fca3114e3a5727fdbbc5e7ebc4e442d0401
+	* src/estream-printf.c (_gpgrt_estream_format): Make sure
+	valuetable.value is inialized even on stack.
+
+2018-05-30  Ineiev  <ineiev@gnu.org>
+
+	po: Update Russian translation.
+	+ commit 043a91b8cd4bb71cb96086b51d6bc1b1a1821a41
+
+
+2018-05-30  Werner Koch  <wk@gnupg.org>
+
+	core: Fix problem with C11 and stdnoreturn.h.
+	+ commit 3eee9efc46f983fe0bf474c814944fef93a2a1b7
+	* src/gpg-error.h.in (GPGRT_ATTR_NORETURN): Use gcc specific symbol name
+	__noreturn__.
+
+2018-05-03  Andre Heinecke  <aheinecke@intevation.de>
+
+	doc: Fix yat2m name for native w32 build.
+	+ commit 6eb80abcde5ad776379069871e4156b28ef69712
+	* doc/Makefile.am: Handle not cross compiling but building for
+	windows.
+
 2018-05-02  Werner Koch  <wk@gnupg.org>
 
 	Release 1.31.

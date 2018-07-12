@@ -1,4 +1,3 @@
-Configure miss: yat2m
 Configure miss: strlwr
 Configure miss: direct.h usability
 Configure miss: direct.h presence
@@ -9,7 +8,6 @@ Configure miss: whether readline via "-lreadline -lcurses" is present and sane
 Configure miss: whether readline via "-lreadline -lncurses" is present and sane
 Configure miss: whether to enable log_clock
 Configure miss: i686-generic-linux-gnu-windres
-Configure miss: yat2m
 Configure miss: strlwr
 Configure miss: direct.h usability
 Configure miss: direct.h presence

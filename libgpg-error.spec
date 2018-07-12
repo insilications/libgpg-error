@@ -5,19 +5,20 @@
 # Source0 file verified with key 0x249B39D24F25E3B6
 #
 Name     : libgpg-error
-Version  : 1.31
-Release  : 28
-URL      : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.31.tar.gz
-Source0  : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.31.tar.gz
-Source99 : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.31.tar.gz.sig
+Version  : 1.32
+Release  : 29
+URL      : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.32.tar.gz
+Source0  : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.32.tar.gz
+Source99 : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.32.tar.gz.sig
 Summary  : libgpg-error
 Group    : Development/Tools
 License  : GPL-2.0 LGPL-2.0+ LGPL-2.1
 Requires: libgpg-error-bin
 Requires: libgpg-error-lib
 Requires: libgpg-error-data
-Requires: libgpg-error-doc
+Requires: libgpg-error-license
 Requires: libgpg-error-locales
+Requires: libgpg-error-man
 BuildRequires : gcc-dev32
 BuildRequires : gcc-libgcc32
 BuildRequires : gcc-libstdc++32
@@ -33,6 +34,8 @@ pinentry, SmartCard Daemon and possibly more in the future.
 Summary: bin components for the libgpg-error package.
 Group: Binaries
 Requires: libgpg-error-data
+Requires: libgpg-error-license
+Requires: libgpg-error-man
 
 %description bin
 bin components for the libgpg-error package.
@@ -73,6 +76,7 @@ dev32 components for the libgpg-error package.
 %package doc
 Summary: doc components for the libgpg-error package.
 Group: Documentation
+Requires: libgpg-error-man
 
 %description doc
 doc components for the libgpg-error package.
@@ -90,6 +94,7 @@ extras components for the libgpg-error package.
 Summary: lib components for the libgpg-error package.
 Group: Libraries
 Requires: libgpg-error-data
+Requires: libgpg-error-license
 
 %description lib
 lib components for the libgpg-error package.
@@ -99,9 +104,18 @@ lib components for the libgpg-error package.
 Summary: lib32 components for the libgpg-error package.
 Group: Default
 Requires: libgpg-error-data
+Requires: libgpg-error-license
 
 %description lib32
 lib32 components for the libgpg-error package.
+
+
+%package license
+Summary: license components for the libgpg-error package.
+Group: Default
+
+%description license
+license components for the libgpg-error package.
 
 
 %package locales
@@ -112,10 +126,18 @@ Group: Default
 locales components for the libgpg-error package.
 
 
+%package man
+Summary: man components for the libgpg-error package.
+Group: Default
+
+%description man
+man components for the libgpg-error package.
+
+
 %prep
-%setup -q -n libgpg-error-1.31
+%setup -q -n libgpg-error-1.32
 pushd ..
-cp -a libgpg-error-1.31 build32
+cp -a libgpg-error-1.32 build32
 popd
 
 %build
@@ -123,7 +145,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1525319958
+export SOURCE_DATE_EPOCH=1531401216
 export CFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
 export FCFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
 export FFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
@@ -147,8 +169,11 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1525319958
+export SOURCE_DATE_EPOCH=1531401216
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/doc/libgpg-error
+cp COPYING.LIB %{buildroot}/usr/share/doc/libgpg-error/COPYING.LIB
+cp COPYING %{buildroot}/usr/share/doc/libgpg-error/COPYING
 pushd ../build32/
 %make_install32
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
@@ -190,9 +215,8 @@ popd
 /usr/lib32/libgpg-error.so
 
 %files doc
-%defattr(-,root,root,-)
+%defattr(0644,root,root,0755)
 %doc /usr/share/info/*
-%doc /usr/share/man/man1/*
 
 %files extras
 %defattr(-,root,root,-)
@@ -204,12 +228,21 @@ popd
 %files lib
 %defattr(-,root,root,-)
 /usr/lib64/libgpg-error.so.0
-/usr/lib64/libgpg-error.so.0.24.2
+/usr/lib64/libgpg-error.so.0.24.3
 
 %files lib32
 %defattr(-,root,root,-)
 /usr/lib32/libgpg-error.so.0
-/usr/lib32/libgpg-error.so.0.24.2
+/usr/lib32/libgpg-error.so.0.24.3
+
+%files license
+%defattr(-,root,root,-)
+/usr/share/doc/libgpg-error/COPYING
+/usr/share/doc/libgpg-error/COPYING.LIB
+
+%files man
+%defattr(-,root,root,-)
+/usr/share/man/man1/gpg-error-config.1
 
 %files locales -f libgpg-error.lang
 %defattr(-,root,root,-)
