@@ -1,3 +1,451 @@
+2018-12-07  Werner Koch  <wk@gnupg.org>
+
+	Release 1.33.
+	+ commit 174985d91ff277bd4a58a0de3d61fbbb46841cde
+	* configure.ac: Set LT version to C25/A25/R0.
+
+	Add W32-only function gpgrt_w32_override_locale.
+	+ commit 0b190ce89de7b3df873c3896d5126c7882b82e18
+	* src/w32-gettext.c (struct override_locale): new.
+	(my_nl_locale_name): Take care of that.
+	(gpgrt_w32_override_locale): New.
+	* src/gpg-error.def.in: Add gpgrt_w32_override_locale.
+	* src/gpg-error.c: New command --locale for Windows.
+
+2018-12-06  Werner Koch  <wk@gnupg.org>
+
+	logging: Escape controls in string arguments of log_ functions.
+	+ commit b7fae45c24cccb9898c6d5a3a633897afb4649dc
+	* src/logging.c (struct fmt_string_filter_s): New.
+	(fmt_string_filter): New.
+	(_gpgrt_logv_internal): Use the filter.
+
+2018-12-05  Werner Koch  <wk@gnupg.org>
+
+	core: Allow logging to an estream.
+	+ commit f4d139b399e1e5044fe6bb0ceecd4c72e63dac94
+	* src/logging.c (set_file_fd): Add and use new arg 'stream'.
+	(_gpgrt_log_set_sink): Implement setting an estream sink.
+	* tests/t-logging.c: New test.
+	* tests/Makefile.am (TESTS): Add test.
+
+	tests: Check print arguments of t-common functions.
+	+ commit 793838fd859afd837df070ee2e75c100e932b220
+	* tests/t-common.h: Include gpgrt.h  instead of gpg-error.h.
+	(die, fail, show): Add printf attributes.
+
+2018-12-05  Marcus Brinkmann  <marcus.brinkmann@rub.de>
+
+	Fix gpgrt_ftruncate declaration.
+	+ commit 34d6637a34b139fbfafa6c15eaf2fc88158a1c3c
+
+
+2018-11-26  Werner Koch  <wk@gnupg.org>
+
+	core: New functions gpgrt_fprintf_sf anf gpgrt_fprintf_sf_unlocked.
+	+ commit bd8668c120ac0f725edb092b2c4ca49ffdb78ed2
+	* src/gpg-error.h.in (gpgrt_string_filter_t): New type.
+	(gpgrt_fprintf_sf, gpgrt_fprintf_sf_unlocked): New.
+	* src/gpg-error.vers, src/gpg-error.def.in: Add them.
+	* src/visibility.c (gpgrt_fprintf_sf): New.
+	(gpgrt_fprintf_sf_unlocked): New.
+	* src/estream-printf.c (pr_string): Add and use args sf, sfvalue and
+	string_no.
+	(do_format): Add args sf and sfvalue.  Keep a string format counter.
+	(_gpgrt_estream_format): Add args sf and sfvalue.  Change all callers
+	to provide NULL for them.
+	* src/estream.c (_gpgrt_vfprintf_unlocked, _gpgrt_vfprintf): Add sf
+	and sfvalue and adjust all callers.
+	(do_print_stream): Ditto.
+
+	* tests/t-printf.c (stream_to_string): New.
+	(struct sfstate_s): New.
+	(string_filter): New.
+	(check_fprintf_sf): New.
+	(main): Call new test.
+
+	core: Add a limited version of gpgrt_ftruncate.
+	+ commit ffb49b72f132d954a3d9fa11e45803c36a62fd25
+	* src/gpg-error.h.in (gpgrt_ftruncate, es_ftruncate): New.
+	* src/gpg-error.def.in, src/gpg-error.vers: Add gpgrt_ftruncate.
+	* src/visibility.c (gpgrt_ftruncate): new.
+	* src/gpgrt-int.h (COOKIE_IOCTL_TRUNCATE): New.
+	* src/estream.c (func_mem_ioctl): Support new internal IOCTL.
+	(_gpgrt_ftruncate): New.
+
+2018-11-15  Werner Koch  <wk@gnupg.org>
+
+	core: New API gpgrt_cmp_version.
+	+ commit a5d4a4b32b11814d673241d62624ecec1d577571
+	* src/gpg-error.h.in: New API gpgrt_cmp_version.
+	* src/visibility.c (gpgrt_cmp_version): New wrapper.
+	* src/version.c (parse_version_string): Revamped.
+	(do_cmp_version): New.
+	(_gpgrt_cmp_version): New.
+	(_gpg_error_check_version): Re-implemented using the new func.
+	* tests/t-version.c: Include t-common.h.
+	(t_gpgrt_cmp_version): New test.
+	(main): Run new test.  Change test for new version number to require a
+	2 level number.
+
+2018-11-14  NIIBE Yutaka  <gniibe@fsij.org>
+
+	gpgrt-config: Prepend PKG_CONFIG_LIBDIR to PKG_CONFIG_PATH.
+	+ commit 4a92763a6e529824f1c6043b75ac1346af41a926
+	* src/gpgrt-config: Handle empty PKG_CONFIG_LIBDIR config, which
+	should ignore --libdir option.  Otherwise, prepend
+	PKG_CONFIG_LIBDIR (instead of appending) to PKG_CONFIG_PATH.
+
+2018-11-13  NIIBE Yutaka  <gniibe@fsij.org>
+
+	Fix typo in the annotation.
+	+ commit 4b41cf3bd16c8afcb4ba152ab9d5d679a7cb91e7
+	* src/init.c [DLL_EXPORT] (DllMain): Fix typo.
+
+	gpgrt.m4: Don't support --with-*-prefix or SYSROOT.
+	+ commit 8ed48537de2b141a8f2050b15a65775374f1aa79
+	* src/gpgrt.m4: Remove old backward compatible support.
+
+2018-11-07  NIIBE Yutaka  <gniibe@fsij.org>
+
+	Fix a typo.
+	+ commit b39b44b9acbed6d4889acba4fe9eae2556c80acc
+	* src/spawn-w32.c (src/spawn-w32.c): Fix to use pid_to_handle.
+
+2018-11-02  NIIBE Yutaka  <gniibe@fsij.org>
+
+	gpgrt-config: Don't support variable reference in --libdir option.
+	+ commit 78af09ce13969b64f121ae5990e66fb7f1cd3f1d
+	* src/gpgrt-config: Simplify --libdir support, remove variable
+	substituion.
+	* src/gpg-error.m4: Expand possible ${prefix}, ${exec_prefix} in
+	libdir.  Simplify invocation of gpgrt-config.
+	* src/gpgrt.m4: Likewise.
+
+	gpg-error.m4: Emit message when using gpgrt-config.
+	+ commit 42413de59a063def05620d899a7fbda265b6c406
+	* src/gpg-error.m4: Add AC_MSG_NOTICE.
+
+	gpg-error.m4: Find gpgrt_libdir by CC.
+	+ commit 7ffd88b0e98af21aa61a57dde042d75f0d403839
+	* src/gpg-error.m4 (gpgrt_libdir): New.  Bump the version date.
+	* src/gpgrt.m4: Likewise.
+
+2018-11-01  NIIBE Yutaka  <gniibe@fsij.org>
+
+	gpg-error.m4: Unset GPGRT_CONFIG when gpgrt-config doesn't work.
+	+ commit 8f034bb3a1bbde2fc7a8d2ada6e3d779c465895b
+	* src/gpg-error.m4: Unset GPGRT_CONFIG when gpgrt-config doesn't work.
+
+	gpgrt-config: It's distributed script.
+	+ commit 998313bd321ae161ec58111ccc6c6f0921007bc5
+	* src/Makefile.am (dist_bin_SCRIPTS): Add gpgrt-config.
+	(bin_SCRIPTS): Remove gpgrt-config.
+
+2018-10-31  Andre Heinecke  <aheinecke@intevation.de>
+
+	w32: Remove cruft in w32-estream from olden times.
+	+ commit 5b898b8bc89c18e2fd02e6c9efd5e91cb96357cc
+	* src/w32-io.c (set_synchronize): Remove.
+	(create_reader, create_writer): No need for set_synchronize.
+
+2018-10-31  NIIBE Yutaka  <gniibe@fsij.org>
+
+	gpgrt-config: Fix typo in the script.
+	+ commit 2e9ee747ac81434ca542291287eb56c9025f0a39
+	* src/gpgrt-config: Add missing $ for libdir_option.
+
+2018-10-29  NIIBE Yutaka  <gniibe@fsij.org>
+
+	gpgrt-config: Better architecture independent support.
+	+ commit 93d45f7e7e937020c796781705516a4b62e6589a
+	* configure.ac: Don't generate gpgrt-config.
+	* src/gpgrt-config: Rename from gpgrt-config.in.
+	(--prefix, --exec-prefix, --libdir): Use --libdir to determine
+	PKG_CONFIG_LIBDIR.
+	* src/Makefile.am (EXTRA_DIST): Remove gpgrt-config.in.
+	* src/gpg-error-config-test.sh: Fix for path to gpgrt-config.
+	* src/gpg-error.m4: Provide --prefix, --exec-prefix, --libdir
+	option from configure.  Don't use CC because we have --libdir.
+	Bump version date.
+	* src/gpgrt.m4: Likewise.
+
+2018-10-27  Ben Kibbey  <bjk@luxsci.net>
+
+	b64dec: Fix to use custom memory handlers.
+	+ commit b229ed40e2653bd3eabaa6931cd8582280a226d7
+	* src/b64dec.c (_gpgrt_b64dec_finish): Use xfree().
+
+2018-10-26  NIIBE Yutaka  <gniibe@fsij.org>
+
+	gpgrt-config: Clean up the implementation.
+	+ commit aec676c9ca2da4feb2970f6ce036179afe778b25
+	* src/gpgrt-config.in: Fix copyright notice.
+	(--exists): Support new option of pkg-config.
+	(--mt): Relax usage.
+	(--api-version): Support old option.
+	(default_module): New.
+	(usage): Only show pkg-config compatible options.
+
+	gpg-error.m4: Better backward compatibility support.
+	+ commit 1096ff770b3d5cc58f423b129cc5d83731398dd9
+	* src/gpg-error.m4: Don't assume newer implementation of
+	gpg-error-config.  Use old way when it found old.
+
+2018-10-25  NIIBE Yutaka  <gniibe@fsij.org>
+
+	gpg-error-config: Keep old gpg-error-config implementation.
+	+ commit ffbff048bde636e3ec19f2912fa4034e70e18f44
+	* configure.ac: Generate gpgrt-config from gpgrt-config.in.
+	* src/gpgrt-config.in: Rename from src/gpg-error-config-new.in.
+	* src/Makefile.am (bin_SCRIPTS): Add gpgrt-config.
+	(EXTRA_DIST): Add gpgrt-config.in removing gpg-error-config-new.in.
+	(BUILT_SOURCES, CLEANFILES): Remove gpgrt-config.
+	(gpg-error-config): Always copy from gpg-error-config-old.
+	* src/gpg-error-config-test.sh: Follow the rename.
+
+	build: Set GPGRT_CONFIG in gpg-error.m4.
+	+ commit e06af32bdde0b4ce8c97193472961f31c5b55ddf
+	* src/gpg-error.m4: Detect gpgrt-config to set GPGRT_CONFIG.
+
+	build: Update gpg-error.m4 and gpgrt.m4.
+	+ commit abc641f27cf712dec572b6629552b6a6f0b7af27
+	* src/gpg-error.m4: Bump version date.
+	(min_gpg_error_version): Require >= 1.33, if not specified.
+	(gpg_error_config_args): Remove bogus uses.
+	* src/gpgrt.m4: Bump version date.
+	(libgpgrt-prefix): Add support of --with-libgpgrt-prefix option.
+	(gpgrt-config): Search/call gpgrt-config instead of gpg-error-config.
+	(min_gpgrt_version): Require >= 1.33, if not specified.
+	(gpgrt_config_args): Remove bogus uses.
+
+2018-10-24  NIIBE Yutaka  <gniibe@fsij.org>
+
+	gpg-error-config: Fix previous commit.
+	+ commit 184c22bea37d2bee3885ef96c1a3664361b02912
+
+
+	gpg-error-config: Old gpg-error-config support --modversion.
+	+ commit 6d8b1e958ca96b366daac38e7084f999d252a9f8
+	* src/gpg-error-config.in: Support --modversion.
+
+	gpg-error-config: Get var/attr from the first package.
+	+ commit 7b81ec272b0c54ac893c09be4715b76e84c27b23
+	* src/gpg-error-config-new.in: Only get it from the first.
+
+2018-10-23  NIIBE Yutaka  <gniibe@fsij.org>
+
+	build: Fix permission.
+	+ commit 25ea85066cf100e3381f7f7b2d8858a7dfcea480
+	* build-aux/config.guess: Chmod +x.
+	* build-aux/config.sub: Chmod +x.
+
+	build: Fix detecting build on multiarch environment.
+	+ commit 00e955558c66f80acad9225d2eae82459d87dc54
+	* configure.ac: Rough match by shell pattern.
+
+	build: Supply CC to invoke gpg-error-config.
+	+ commit f575b2fd3f733d78fb61b04805ea63ce65d89e19
+	* src/gpg-error.m4: Add CC when invoking gpg-error-config.
+	* src/gpgrt.m4: Likewise.
+
+	gpg-error-config: Fix cross build support.
+	+ commit 40e22c774afebca23fdaa6dec2b8698572501c32
+	* configure.ac: Fix regexp matching multiarch environment.
+	* src/gpg-error-config-new.in: Support standard cross build.
+	Handle the case where $multiarch != $triplet.
+
+2018-10-22  NIIBE Yutaka  <gniibe@fsij.org>
+
+	yat2m: Avoid compiler warnings.
+	+ commit 12b834ba59ae2f3cd0568e4cfa1dca47fc41269a
+	* doc/yat2m.c (isodatestring): Prepare enough buffer.
+
+	gpg-error-config: Support "auto", architecture independent script.
+	+ commit 91bcb2c7d824de50c7dfedd4490e515ddb5dfc5a
+	* configure.ac (pkg_config_libdir): Set it "auto" when it looks
+	multiarch environment.
+	* src/gpg-error-config-new.in: Automatically detects the triplet.
+
+	build: Update config.{guess,sub} to {2018-08-29,2018-08-29}.
+	+ commit 6d2e0546d50a0d4511fb7167566bfd0058a68f38
+	* build-aux/config.guess: Update.
+	* build-aux/config.sub: Update.
+
+2018-10-19  Daniel Kahn Gillmor  <dkg@fifthhorseman.net>
+
+	build-aux: use https instead of http.
+	+ commit e99480affa595702595e59333aca96ab28389d34
+
+
+2018-10-17  NIIBE Yutaka  <gniibe@fsij.org>
+
+	gpg-error-config: Fix PKG_CONFIG_LIBDIR support.
+	+ commit d8cf57c35d4627fa28588d6ec385fcffbc5a01a0
+	* configure.ac (pkg_config_libdir): New.
+	* src/gpg-error-config-new.in: Use pkg_config_libdir.
+
+2018-10-16  NIIBE Yutaka  <gniibe@fsij.org>
+
+	gpg-error-config: Support PKG_CONFIG_LIBDIR.
+	+ commit e9566da20cf9428e3094cbd63277ea2179459232
+	* src/gpg-error-config-new.in: Use PKG_CONFIG_LIBDIR if specified.
+
+2018-10-12  Wookey  <wookey@debian.org>
+	    Wookey  <wookey@debian.org>
+
+	syscfg: Add support for arm64ilp32.
+	+ commit a3f4e8838036a14e87cca811e40c9f670f152fcd
+	* src/syscfg/lock-obj-pub.aarch64-unknown-linux-gnu_ilp32.h: New.
+	* src/Makefile.am (lock_obj_pub): Add it.
+
+2018-10-10  NIIBE Yutaka  <gniibe@fsij.org>
+
+	gpg-error-config: Fix the place of *.pc (for multilib).
+	+ commit 9f71b28dcb38e1d5d9001692e2f64009396aaf9b
+	* src/Makefile.am (pkgconfigdir): It should be under libdir.
+	* src/gpg-error-config-new.in: Likewise.
+
+	gpg-error-config: Add PKG_CONFIG_SYSROOT_DIR support.
+	+ commit 6167f3c461a4e53ccc5af620cdbfa28bfa9234f5
+	* src/gpg-error-config-new.in (sysroot): New function.
+	(want_cflags, want_libs): Use sysroot.
+	* src/gpg-error-config-test.sh: Test with PKG_CONFIG_SYSROOT_DIR.
+
+2018-09-21  Werner Koch  <wk@gnupg.org>
+
+	syscfg: Add support for arc-unknown-linux-gnu.
+	+ commit f4f0da74f526d7e35cedbc2e93454df6440dbfa5
+	* src/mkheader.c (canon_host_triplet): Add to table.
+
+	core: Make cross building in mkheader more explicit.
+	+ commit b371e3ca906e6a4db31900d419ddc2b21bed1ea3
+	* src/mkheader.c (main): Add option --cross.
+	(write_special): Don't use native in cross mode.
+	* src/Makefile.am (mkheader_opts): New.
+	(gpg-error.h): Add MKHEADER_OPTS.
+
+	core: Simplify calling convention of mkheader.
+	+ commit 3fc4ce49b23a364a1cf255c8e9e259047206e1e8
+	* src/Makefile.am (gpg-error.h): Remove HOST_OS from mkheader call.
+	* src/mkheader.c (canon_host_triplet): Add return arg r_os.
+	(main): Remove first arg and derive host_os from host_triplet.
+
+2018-09-20  NIIBE Yutaka  <gniibe@fsij.org>
+
+	src: Fix portability for echo.
+	+ commit 15309d0fb4c78f8de9bc5dea7d0f8b7468a957b4
+	* src/Makefile.am: Use ECHO_N and ECHO_C.
+
+	gpg-error-config: Remove white space for the output by old.
+	+ commit d510f38ccbc715faa8e07828bf6acd8e9b9a0658
+	* src/gpg-error-config-test.sh: Remove white spaces at the
+	end or at the beginning.
+
+	gpg-error-config: Use expr to remove var in expression.
+	+ commit a338801aa4bac9a3551729598bcb0ca41882cdb9
+	* src/gpg-error-config-new.in (remove_var_expr): Use expr.
+
+	gpg-error-config: Fix a variable name for zsh.
+	+ commit 4c2601a95f06efd352ad407add71a7ea6bab8152
+	* src/gpg-error-config-new.in (module_list): Rename from modules.
+
+	gpg-error-config: Don't use local variables.
+	+ commit 5731ad6377abcd3d36fd6aa59923a640b25b589b
+	* src/gpg-error-config-new.in: Use global variables only.
+
+	gpg-error-config: Avoid more space char.
+	+ commit 95ab4d037ce2b69754c0542949bf7d9d2467d96b
+	* src/gpg-error-config-new.in: Don't put more space.
+
+2018-09-19  NIIBE Yutaka  <gniibe@fsij.org>
+
+	src: Fix Makefile for BSD make.
+	+ commit 144f4b3df5200ce056f00e20420cde77eb1f673d
+	* src/Makefile.am (BUILT_SOURCES): Add srcdir to err-sources.h and
+	err-codes.h.
+	(CLEANFILES): Move err-sources.h and err-codes.h to...
+	(MAINTAINERCLEANFILES): ... this new target.
+	(gpg_error_LDADD): Remove ./ to generate libgpg-error.la.
+
+	Accept pkgconf difference for spaces.
+	+ commit 5564efac95e9546af948fc13c90584264b322950
+	* src/gpg-error-config-test.sh (OUTPUT_OLD): Use shell
+	and echo to remove spaces.
+
+2018-09-18  Werner Koch  <wk@gnupg.org>
+
+	syscfg: Support ARC CPUs and simplify aliasing table.
+	+ commit 48c8f8ddfc80551db7615e1eb3555c1dc3f6a657
+	* src/mkheader.c (xmalloc): New.
+	(xstrdup): Implement using xmalloc.
+	(canon_host_triplet): Add supporr for arc CPU.  Adjust alias table to
+	also alias *-pc-*.  Rename ibm to unknown. Add internal arg.  Add
+	unknown vendor hack.
+	(main): New mode to just print the canonicalized form.
+	* src/Makefile.am (lock_obj_pub): s/-(pc|ibm)-/-unknown/.  Also rename
+	files accordingly.
+
+2018-09-11  NIIBE Yutaka  <gniibe@fsij.org>
+
+	Make gpg-error-config compatible to pkg-config.
+	+ commit 78b679a778ddf37b8952f1808fd8c52cc8163f17
+	* configure.ac (AC_CONFIG_FILES): Generate src/gpg-error.pc, as well
+	as src/gpg-error-config-old and src/gpg-error-config-new.
+	* src/Makefile.am (pkgconfigdir, pkgconfig_DATA): New.
+	(EXTRA_DIST): Add gpg-error-config-new.in, gpg-error-config-test.sh,
+	and gpg-error.pc.in.
+	(CLEANFILES): Add gpg-error-config gpg-error-config-test.log.
+	(TESTS): New.
+	(gpg-error-config): New target.
+	* src/gpg-error-config-new.in: New.
+	* src/gpg-error-config-test.sh: New.
+	* src/gpg-error.pc.in: New.
+	* src/gpg-error.m4 (GPG_ERROR_MT_CFLAGS): Use --variable.
+	(GPG_ERROR_MT_LIBS, gpg_error_config_host): Likewise.
+
+2018-09-06  NIIBE Yutaka  <gniibe@fsij.org>
+
+	gpgscm: Suppress warnings for GCC > 6.
+	+ commit b2aba1bec151d6e6cbf66359a30ba2ff458fc138
+	* tests/gpgscm/scheme.c (CASE): Use unused attribute for GCC > 6.
+	(FALLTHROUGH): New for fallthrough.
+	(Eval_Cycle): Use FALLTHROUGH.  Remove not-needed comment of
+	fallthrough.
+
+	po: Fix the previous commit.
+	+ commit 2148e19fbefa9c5d5cdc4982cd2043136c31fb64
+
+
+2018-09-05  NIIBE Yutaka  <gniibe@fsij.org>
+
+	po: Update Japanese Translation.
+	+ commit cb0113f4690ed130c55ef4c6d8699ebc051e957e
+
+
+	gpg-error-config: Forward compatibility support.
+	+ commit 61d78fdc25e5ff9289697c141457d8d322232250
+	* src/gpg-error-config.in: Support --variable=* option.
+
+2018-09-04  NIIBE Yutaka  <gniibe@fsij.org>
+
+	gpg-error-config: Determine output at configure time.
+	+ commit aa697dae4c363b3d24ec9be3a0cd41df3bf806ce
+	* src/gpg-error-config.in (isubdirafter): Remove.
+	Also for --cflags and --libs.
+	* configure.ac (GPG_ERROR_CONFIG_ISUBDIRAFTER): Remove.
+	(GPG_ERROR_CONFIG_CFLAGS): Add -idirafter gpg-extra for W32CE.
+	(GPG_ERROR_CONFIG_CFLAGS): Decide here if adding -I$includedir.
+	(GPG_ERROR_CONFIG_LIBS): Decide here if adding -L$libdir.
+
+2018-07-17  Michael Haubenwallner  <michael.haubenwallner@ssi-schaefer.com>
+
+	build: use EXEEXT_FOR_BUILD everywhere.
+	+ commit 19f9902b004cb980de4da908fa571103bfe2b630
+	* src/Makefile.am: Use EXEEXT_FOR_BUILD with all build tools.
+
+		<michael.haubenwallner@ssi-schaefer.com>
+
 2018-07-12  Werner Koch  <wk@gnupg.org>
 
 	Release 1.32.
