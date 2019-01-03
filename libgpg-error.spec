@@ -7,7 +7,7 @@
 %define keepstatic 1
 Name     : libgpg-error
 Version  : 1.33
-Release  : 31
+Release  : 32
 URL      : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.33.tar.gz
 Source0  : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.33.tar.gz
 Source99 : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.33.tar.gz.sig
@@ -146,7 +146,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1546529996
+export SOURCE_DATE_EPOCH=1546530467
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
@@ -154,7 +154,7 @@ export CFLAGS="$CFLAGS -O3 -Os -fdata-sections -ffat-lto-objects -ffunction-sect
 export FCFLAGS="$CFLAGS -O3 -Os -fdata-sections -ffat-lto-objects -ffunction-sections -flto=4 -fno-semantic-interposition "
 export FFLAGS="$CFLAGS -O3 -Os -fdata-sections -ffat-lto-objects -ffunction-sections -flto=4 -fno-semantic-interposition "
 export CXXFLAGS="$CXXFLAGS -O3 -Os -fdata-sections -ffat-lto-objects -ffunction-sections -flto=4 -fno-semantic-interposition "
-%configure
+%configure  --enable-static
 make  %{?_smp_mflags}
 
 pushd ../build32/
@@ -163,7 +163,7 @@ export ASFLAGS="$ASFLAGS --32"
 export CFLAGS="$CFLAGS -m32"
 export CXXFLAGS="$CXXFLAGS -m32"
 export LDFLAGS="$LDFLAGS -m32"
-%configure     --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
+%configure  --enable-static   --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
 make  %{?_smp_mflags}
 popd
 %check
@@ -176,7 +176,7 @@ cd ../build32;
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1546529996
+export SOURCE_DATE_EPOCH=1546530467
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libgpg-error
 cp COPYING %{buildroot}/usr/share/package-licenses/libgpg-error/COPYING
@@ -214,12 +214,14 @@ popd
 %files dev
 %defattr(-,root,root,-)
 /usr/include/*.h
+/usr/lib64/*.a
 /usr/lib64/libgpg-error.so
 /usr/lib64/pkgconfig/gpg-error.pc
 /usr/share/aclocal/*.m4
 
 %files dev32
 %defattr(-,root,root,-)
+/usr/lib32/*.a
 /usr/lib32/libgpg-error.so
 /usr/lib32/pkgconfig/32gpg-error.pc
 /usr/lib32/pkgconfig/gpg-error.pc
