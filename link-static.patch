@@ -5,7 +5,7 @@
  
  # Default value for GPG_ERROR_CONFIG_LIBS
 -config_libs="-lgpg-error"
-+config_libs="/usr/lib64/libgpg-error.a"
++config_libs="-lgpg-error.a"
  
  #
  # Check for other libraries
