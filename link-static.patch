@@ -1,0 +1,11 @@
+--- libgpg-error-1.33/configure.ac~	2018-12-07 15:57:53.000000000 +0000
++++ libgpg-error-1.33/configure.ac	2019-01-03 15:54:47.101616382 +0000
+@@ -435,7 +435,7 @@
+ fi
+ 
+ # Default value for GPG_ERROR_CONFIG_LIBS
+-config_libs="-lgpg-error"
++config_libs="/usr/lib64/libgpg-error.a"
+ 
+ #
+ # Check for other libraries
