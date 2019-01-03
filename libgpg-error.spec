@@ -7,7 +7,7 @@
 %define keepstatic 1
 Name     : libgpg-error
 Version  : 1.33
-Release  : 34
+Release  : 35
 URL      : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.33.tar.gz
 Source0  : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.33.tar.gz
 Source99 : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.33.tar.gz.sig
@@ -155,7 +155,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1546531238
+export SOURCE_DATE_EPOCH=1546534849
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
@@ -185,7 +185,7 @@ cd ../build32;
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1546531238
+export SOURCE_DATE_EPOCH=1546534849
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libgpg-error
 cp COPYING %{buildroot}/usr/share/package-licenses/libgpg-error/COPYING
