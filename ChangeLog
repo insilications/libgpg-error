@@ -1,4 +1,78 @@
+2019-01-16  Werner Koch  <wk@gnupg.org>
+
+	Release 1.34.
+	+ commit 8bc75741cadf95e2fac64891cf402cde891afe64
+	* configure.ac: Bump LT version to C26/A26/R0.
+
+	build: Fix regression in make distcheck.
+	+ commit 5d2b20a04b526d090a2328bd79bc3a76ced327dc
+	* doc/Makefile.am (errorref.txt.x):
+
+2019-01-15  NIIBE Yutaka  <gniibe@fsij.org>
+
+	build: Fix for BSD make.
+	+ commit fd6f64f1897e00b1d9711463ebb6ec7d099e1995
+	* doc/Makefile.am (errorref.txt.x): Don't use $<.
+
+2019-01-14  Andre Heinecke  <aheinecke@gnupg.org>
+
+	Fix symbol name typo in gpg-error.def.in.
+	+ commit 51ea153871b79799f88b85f6b60c2b0a3bbd6a12
+	* src/gpg-error.def.in (gogrt_abort): Correct to gpgrt_abort.
+
+2019-01-10  NIIBE Yutaka  <gniibe@fsij.org>
+
+	build: Build with LD_LIBRARY_PATH, use of DT_RPATH (2/2).
+	+ commit 1fd997231b717853822dff9d3e981d95765f323d
+	* configure.ac (LDADD_FOR_TESTS_KLUDGE): New for --disable-new-dtags.
+	* tests/Makefile.am (LDADD): Use LDADD_FOR_TESTS_KLUDGE.
+	(t_lock_LDADD, t_poll_LDADD): Use LDADD.
+
+	build: Build with LD_LIBRARY_PATH, use of DT_RPATH (1/2).
+	+ commit 1044ee639dab7260da481250cd2a46a69ab2b5d3
+	* configure.ac: Check against --disable-new-dtags.
+
+2019-01-04  Werner Koch  <wk@gnupg.org>
+
+	core: New functions gpgrt_abort and gpgrt_add_emergency_cleanup.
+	+ commit 933bfd7b652a907c0d8dd5337c6b5b9cb82ce7b7
+	* src/init.c (emergency_cleanup_list): New gloabl var.
+	(_gpgrt_add_emergency_cleanup): New.
+	(_gpgrt_abort): New. Repalce all calls to abort by this.  Also replace
+	all assert by either log_assert or a stderr output followed by a
+	_gpgrt_abort.
+	(run_emergency_cleanup): New.
+	* src/visibility.c (gpgrt_add_emergency_cleanup): New public API.
+	(gpgrt_abort): New public API.
+
+2018-12-12  Werner Koch  <wk@gnupg.org>
+
+	estream: Use correct POSIX name THOUSEP.
+	+ commit 12349de46d241cfbadbdf99773d6cabfcbc97578
+	* src/estream-printf.c: Replace HAVE_LANGINFO_THOUSANDS_SEP by
+	HAVE_LANGINFO_THOUSEP.
+	(pr_integer): Use THOUSEP.
+
+2018-12-11  Alistair Francis  <Alistair.Francis@wdc.com>
+
+	syscfg: Add a riscv32 architecture.
+	+ commit 27ded21fea2a6f1fc161a91744014cce711ad1b3
+	* src/syscfg/lock-obj-pub.riscv32-unknown-linux-gnu.h: New.
+	* src/Makefile.am (lock_obj_pub): Add it.
+
+2018-12-10  NIIBE Yutaka  <gniibe@fsij.org>
+
+	gpgrt-config: Portability fix for use of expr.
+	+ commit 1d71dbb13709318567aba5b61928d8af37563097
+	* src/gpgrt-config (sysroot): Care about possible interpretation of
+	minus sign be considered an option to a program.
+	(MAIN): Don't use 'match' of expr but use ':' instead.
+
 2018-12-07  Werner Koch  <wk@gnupg.org>
+
+	Silence cc warning about snprintf redefinition.
+	+ commit 60f3d4440249d7beec3390df66143204ea80be39
+	* src/gpgrt-int.h: First undef snprintf.
 
 	Release 1.33.
 	+ commit 174985d91ff277bd4a58a0de3d61fbbb46841cde
