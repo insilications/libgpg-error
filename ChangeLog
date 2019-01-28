@@ -1,3 +1,10 @@
+2019-01-23  NIIBE Yutaka  <gniibe@fsij.org>
+
+	gpgscm: Build well even if NDEBUG defined.
+	+ commit 8a9397896fd202dcfb3fb46259e43bc05a0ddd2e
+	* gpgscm/scheme.c (gc_reservation_failure): Fix adding ";".
+	[!NDEBUG] (scheme_init_custom_alloc): Don't init seserved_lineno.
+
 2019-01-16  Werner Koch  <wk@gnupg.org>
 
 	Release 1.34.
