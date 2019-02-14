@@ -7,7 +7,7 @@
 %define keepstatic 1
 Name     : libgpg-error
 Version  : 1.35
-Release  : 38
+Release  : 39
 URL      : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.35.tar.gz
 Source0  : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.35.tar.gz
 Source99 : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.35.tar.gz.sig
