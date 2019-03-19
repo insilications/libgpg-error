@@ -6,11 +6,11 @@
 #
 %define keepstatic 1
 Name     : libgpg-error
-Version  : 1.35
-Release  : 40
-URL      : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.35.tar.gz
-Source0  : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.35.tar.gz
-Source99 : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.35.tar.gz.sig
+Version  : 1.36
+Release  : 41
+URL      : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz
+Source0  : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz
+Source99 : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz.sig
 Summary  : libgpg-error
 Group    : Development/Tools
 License  : GPL-2.0 LGPL-2.0+ LGPL-2.1
@@ -36,7 +36,6 @@ Summary: bin components for the libgpg-error package.
 Group: Binaries
 Requires: libgpg-error-data = %{version}-%{release}
 Requires: libgpg-error-license = %{version}-%{release}
-Requires: libgpg-error-man = %{version}-%{release}
 
 %description bin
 bin components for the libgpg-error package.
@@ -57,6 +56,7 @@ Requires: libgpg-error-lib = %{version}-%{release}
 Requires: libgpg-error-bin = %{version}-%{release}
 Requires: libgpg-error-data = %{version}-%{release}
 Provides: libgpg-error-devel = %{version}-%{release}
+Requires: libgpg-error = %{version}-%{release}
 
 %description dev
 dev components for the libgpg-error package.
@@ -136,9 +136,9 @@ man components for the libgpg-error package.
 
 
 %prep
-%setup -q -n libgpg-error-1.35
+%setup -q -n libgpg-error-1.36
 pushd ..
-cp -a libgpg-error-1.35 build32
+cp -a libgpg-error-1.36 build32
 popd
 
 %build
@@ -146,7 +146,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1548689978
+export SOURCE_DATE_EPOCH=1553002991
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
@@ -159,10 +159,10 @@ make  %{?_smp_mflags}
 
 pushd ../build32/
 export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
-export ASFLAGS="$ASFLAGS --32"
-export CFLAGS="$CFLAGS -m32"
-export CXXFLAGS="$CXXFLAGS -m32"
-export LDFLAGS="$LDFLAGS -m32"
+export ASFLAGS="${ASFLAGS}${ASFLAGS:+ }--32"
+export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32"
+export CXXFLAGS="${CXXFLAGS}${CXXFLAGS:+ }-m32"
+export LDFLAGS="${LDFLAGS}${LDFLAGS:+ }-m32"
 %configure  --enable-static   --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
 make  %{?_smp_mflags}
 popd
@@ -176,7 +176,7 @@ cd ../build32;
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1548689978
+export SOURCE_DATE_EPOCH=1553002991
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libgpg-error
 cp COPYING %{buildroot}/usr/share/package-licenses/libgpg-error/COPYING
@@ -242,12 +242,12 @@ popd
 %files lib
 %defattr(-,root,root,-)
 /usr/lib64/libgpg-error.so.0
-/usr/lib64/libgpg-error.so.0.26.1
+/usr/lib64/libgpg-error.so.0.27.0
 
 %files lib32
 %defattr(-,root,root,-)
 /usr/lib32/libgpg-error.so.0
-/usr/lib32/libgpg-error.so.0.26.1
+/usr/lib32/libgpg-error.so.0.27.0
 
 %files license
 %defattr(0644,root,root,0755)

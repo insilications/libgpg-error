@@ -1,3 +1,22 @@
+2019-03-19  Werner Koch  <wk@gnupg.org>
+
+	Release 1.36.
+	+ commit 85f427fd28ae5947277ba02dffc83c53d9da2591
+	* configure.ac: Bump LT version to C27/A27/R0.
+
+	estream: Increase buffer size for Windows.
+	+ commit e4f460d8e338d6866a6ab457dcd811c63399706a
+	* src/gpgrt-int.h (BUFFER_BLOCK_SIZE) [W32]: Increase from 512 to 8k.
+	* src/w32-estream.c (READBUF_SIZE, WRITEBUF_SIZE): Increase from 4k to
+	8k.
+
+2019-02-04  Werner Koch  <wk@gnupg.org>
+
+	build: Fix for Microsoft MSVC.
+	+ commit 21dd885eecdee13da1689519e2fc50fcf64f6ef2
+	* src/gpgrt-int.h (_gpgrt_functions_w32_pollable): Declare with extern
+	so that strict toolchains don't get confused.
+
 2019-01-23  NIIBE Yutaka  <gniibe@fsij.org>
 
 	gpgscm: Build well even if NDEBUG defined.
