@@ -7,7 +7,7 @@
 %define keepstatic 1
 Name     : libgpg-error
 Version  : 1.36
-Release  : 41
+Release  : 42
 URL      : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz
 Source0  : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz
 Source99 : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz.sig
@@ -20,11 +20,20 @@ Requires: libgpg-error-lib = %{version}-%{release}
 Requires: libgpg-error-license = %{version}-%{release}
 Requires: libgpg-error-locales = %{version}-%{release}
 Requires: libgpg-error-man = %{version}-%{release}
+Requires: libgpg-error-staticdev32 = %{version}-%{release}
+BuildRequires : automake
+BuildRequires : automake-dev
 BuildRequires : gcc-dev32
 BuildRequires : gcc-libgcc32
 BuildRequires : gcc-libstdc++32
+BuildRequires : gettext-bin
 BuildRequires : glibc-dev32
 BuildRequires : glibc-libc32
+BuildRequires : libtool
+BuildRequires : libtool-dev
+BuildRequires : m4
+BuildRequires : pkg-config-dev
+Patch1: fix-build.patch
 
 %description
 This is a library that defines common error values for all GnuPG
@@ -135,8 +144,26 @@ Group: Default
 man components for the libgpg-error package.
 
 
+%package staticdev
+Summary: staticdev components for the libgpg-error package.
+Group: Default
+Requires: libgpg-error-dev = %{version}-%{release}
+
+%description staticdev
+staticdev components for the libgpg-error package.
+
+
+%package staticdev32
+Summary: staticdev32 components for the libgpg-error package.
+Group: Default
+
+%description staticdev32
+staticdev32 components for the libgpg-error package.
+
+
 %prep
 %setup -q -n libgpg-error-1.36
+%patch1 -p1
 pushd ..
 cp -a libgpg-error-1.36 build32
 popd
@@ -146,7 +173,8 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1553002991
+export SOURCE_DATE_EPOCH=1558372344
+export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
@@ -154,18 +182,18 @@ export CFLAGS="$CFLAGS -O3 -Os -fdata-sections -ffat-lto-objects -ffunction-sect
 export FCFLAGS="$CFLAGS -O3 -Os -fdata-sections -ffat-lto-objects -ffunction-sections -flto=4 -fno-semantic-interposition "
 export FFLAGS="$CFLAGS -O3 -Os -fdata-sections -ffat-lto-objects -ffunction-sections -flto=4 -fno-semantic-interposition "
 export CXXFLAGS="$CXXFLAGS -O3 -Os -fdata-sections -ffat-lto-objects -ffunction-sections -flto=4 -fno-semantic-interposition "
-%configure  --enable-static
+%reconfigure  --enable-static
 make  %{?_smp_mflags}
-
 pushd ../build32/
 export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 export ASFLAGS="${ASFLAGS}${ASFLAGS:+ }--32"
 export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32"
 export CXXFLAGS="${CXXFLAGS}${CXXFLAGS:+ }-m32"
 export LDFLAGS="${LDFLAGS}${LDFLAGS:+ }-m32"
-%configure  --enable-static   --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
+%reconfigure  --enable-static  --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
 make  %{?_smp_mflags}
 popd
+
 %check
 export LANG=C
 export http_proxy=http://127.0.0.1:9/
@@ -176,7 +204,7 @@ cd ../build32;
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1553002991
+export SOURCE_DATE_EPOCH=1558372344
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libgpg-error
 cp COPYING %{buildroot}/usr/share/package-licenses/libgpg-error/COPYING
@@ -215,14 +243,12 @@ popd
 %defattr(-,root,root,-)
 %exclude /usr/lib64/libgpg-error.so
 /usr/include/*.h
-/usr/lib64/*.a
 /usr/lib64/pkgconfig/gpg-error.pc
 /usr/share/aclocal/*.m4
 
 %files dev32
 %defattr(-,root,root,-)
 %exclude /usr/lib32/libgpg-error.so
-/usr/lib32/*.a
 /usr/lib32/pkgconfig/32gpg-error.pc
 /usr/lib32/pkgconfig/gpg-error.pc
 
@@ -257,6 +283,14 @@ popd
 %files man
 %defattr(0644,root,root,0755)
 /usr/share/man/man1/gpgrt-config.1
+
+%files staticdev
+%defattr(-,root,root,-)
+/usr/lib64/libgpg-error.a
+
+%files staticdev32
+%defattr(-,root,root,-)
+/usr/lib32/libgpg-error.a
 
 %files locales -f libgpg-error.lang
 %defattr(-,root,root,-)
