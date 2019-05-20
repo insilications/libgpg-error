@@ -7,7 +7,7 @@
 %define keepstatic 1
 Name     : libgpg-error
 Version  : 1.36
-Release  : 42
+Release  : 43
 URL      : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz
 Source0  : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz
 Source99 : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz.sig
@@ -20,7 +20,6 @@ Requires: libgpg-error-lib = %{version}-%{release}
 Requires: libgpg-error-license = %{version}-%{release}
 Requires: libgpg-error-locales = %{version}-%{release}
 Requires: libgpg-error-man = %{version}-%{release}
-Requires: libgpg-error-staticdev32 = %{version}-%{release}
 BuildRequires : automake
 BuildRequires : automake-dev
 BuildRequires : gcc-dev32
@@ -156,6 +155,7 @@ staticdev components for the libgpg-error package.
 %package staticdev32
 Summary: staticdev32 components for the libgpg-error package.
 Group: Default
+Requires: libgpg-error-dev = %{version}-%{release}
 
 %description staticdev32
 staticdev32 components for the libgpg-error package.
@@ -173,7 +173,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1558372344
+export SOURCE_DATE_EPOCH=1558375452
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -204,7 +204,7 @@ cd ../build32;
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1558372344
+export SOURCE_DATE_EPOCH=1558375452
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libgpg-error
 cp COPYING %{buildroot}/usr/share/package-licenses/libgpg-error/COPYING
