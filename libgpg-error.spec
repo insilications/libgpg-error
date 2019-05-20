@@ -8,9 +8,9 @@
 Name     : libgpg-error
 Version  : 1.36
 Release  : 42
-URL      : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz
-Source0  : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz
-Source99 : ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz.sig
+URL      : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz
+Source0  : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz
+Source99 : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz.sig
 Summary  : libgpg-error
 Group    : Development/Tools
 License  : GPL-2.0 LGPL-2.0+ LGPL-2.1
