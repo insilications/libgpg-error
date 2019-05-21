@@ -7,7 +7,7 @@
 %define keepstatic 1
 Name     : libgpg-error
 Version  : 1.36
-Release  : 43
+Release  : 44
 URL      : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz
 Source0  : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz
 Source99 : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz.sig
@@ -173,7 +173,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1558375452
+export SOURCE_DATE_EPOCH=1558462967
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -204,7 +204,7 @@ cd ../build32;
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1558375452
+export SOURCE_DATE_EPOCH=1558462967
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libgpg-error
 cp COPYING %{buildroot}/usr/share/package-licenses/libgpg-error/COPYING
@@ -241,14 +241,14 @@ popd
 
 %files dev
 %defattr(-,root,root,-)
-%exclude /usr/lib64/libgpg-error.so
 /usr/include/*.h
+/usr/lib64/libgpg-error.so
 /usr/lib64/pkgconfig/gpg-error.pc
 /usr/share/aclocal/*.m4
 
 %files dev32
 %defattr(-,root,root,-)
-%exclude /usr/lib32/libgpg-error.so
+/usr/lib32/libgpg-error.so
 /usr/lib32/pkgconfig/32gpg-error.pc
 /usr/lib32/pkgconfig/gpg-error.pc
 
@@ -258,8 +258,6 @@ popd
 
 %files extras
 %defattr(-,root,root,-)
-/usr/lib32/libgpg-error.so
-/usr/lib64/libgpg-error.so
 /usr/share/common-lisp/source/gpg-error/gpg-error-codes.lisp
 /usr/share/common-lisp/source/gpg-error/gpg-error-package.lisp
 /usr/share/common-lisp/source/gpg-error/gpg-error.asd

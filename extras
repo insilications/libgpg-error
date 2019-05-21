@@ -2,5 +2,3 @@
 /usr/share/common-lisp/source/gpg-error/gpg-error-package.lisp
 /usr/share/common-lisp/source/gpg-error/gpg-error.asd
 /usr/share/common-lisp/source/gpg-error/gpg-error.lisp
-/usr/lib64/libgpg-error.so
-/usr/lib32/libgpg-error.so
