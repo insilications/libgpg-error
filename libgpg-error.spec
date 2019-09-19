@@ -7,10 +7,10 @@
 %define keepstatic 1
 Name     : libgpg-error
 Version  : 1.36
-Release  : 44
+Release  : 45
 URL      : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz
 Source0  : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz
-Source99 : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz.sig
+Source1 : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz.sig
 Summary  : libgpg-error
 Group    : Development/Tools
 License  : GPL-2.0 LGPL-2.0+ LGPL-2.1
@@ -172,8 +172,8 @@ popd
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1558462967
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1568862822
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -187,15 +187,15 @@ make  %{?_smp_mflags}
 pushd ../build32/
 export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 export ASFLAGS="${ASFLAGS}${ASFLAGS:+ }--32"
-export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32"
-export CXXFLAGS="${CXXFLAGS}${CXXFLAGS:+ }-m32"
-export LDFLAGS="${LDFLAGS}${LDFLAGS:+ }-m32"
+export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32 -mstackrealign"
+export CXXFLAGS="${CXXFLAGS}${CXXFLAGS:+ }-m32 -mstackrealign"
+export LDFLAGS="${LDFLAGS}${LDFLAGS:+ }-m32 -mstackrealign"
 %reconfigure  --enable-static  --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
 make  %{?_smp_mflags}
 popd
 
 %check
-export LANG=C
+export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
@@ -204,7 +204,7 @@ cd ../build32;
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1558462967
+export SOURCE_DATE_EPOCH=1568862822
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libgpg-error
 cp COPYING %{buildroot}/usr/share/package-licenses/libgpg-error/COPYING
@@ -233,15 +233,12 @@ popd
 
 %files data
 %defattr(-,root,root,-)
-%exclude /usr/share/common-lisp/source/gpg-error/gpg-error-codes.lisp
-%exclude /usr/share/common-lisp/source/gpg-error/gpg-error-package.lisp
-%exclude /usr/share/common-lisp/source/gpg-error/gpg-error.asd
-%exclude /usr/share/common-lisp/source/gpg-error/gpg-error.lisp
 /usr/share/libgpg-error/errorref.txt
 
 %files dev
 %defattr(-,root,root,-)
-/usr/include/*.h
+/usr/include/gpg-error.h
+/usr/include/gpgrt.h
 /usr/lib64/libgpg-error.so
 /usr/lib64/pkgconfig/gpg-error.pc
 /usr/share/aclocal/*.m4
