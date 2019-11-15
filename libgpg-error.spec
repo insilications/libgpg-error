@@ -7,7 +7,7 @@
 %define keepstatic 1
 Name     : libgpg-error
 Version  : 1.36
-Release  : 45
+Release  : 46
 URL      : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz
 Source0  : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz
 Source1 : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz.sig
@@ -16,6 +16,7 @@ Group    : Development/Tools
 License  : GPL-2.0 LGPL-2.0+ LGPL-2.1
 Requires: libgpg-error-bin = %{version}-%{release}
 Requires: libgpg-error-data = %{version}-%{release}
+Requires: libgpg-error-info = %{version}-%{release}
 Requires: libgpg-error-lib = %{version}-%{release}
 Requires: libgpg-error-license = %{version}-%{release}
 Requires: libgpg-error-locales = %{version}-%{release}
@@ -82,21 +83,20 @@ Requires: libgpg-error-dev = %{version}-%{release}
 dev32 components for the libgpg-error package.
 
 
-%package doc
-Summary: doc components for the libgpg-error package.
-Group: Documentation
-Requires: libgpg-error-man = %{version}-%{release}
-
-%description doc
-doc components for the libgpg-error package.
-
-
 %package extras
 Summary: extras components for the libgpg-error package.
 Group: Default
 
 %description extras
 extras components for the libgpg-error package.
+
+
+%package info
+Summary: info components for the libgpg-error package.
+Group: Default
+
+%description info
+info components for the libgpg-error package.
 
 
 %package lib
@@ -163,6 +163,7 @@ staticdev32 components for the libgpg-error package.
 
 %prep
 %setup -q -n libgpg-error-1.36
+cd %{_builddir}/libgpg-error-1.36
 %patch1 -p1
 pushd ..
 cp -a libgpg-error-1.36 build32
@@ -173,7 +174,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1568862822
+export SOURCE_DATE_EPOCH=1573789584
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -204,11 +205,11 @@ cd ../build32;
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1568862822
+export SOURCE_DATE_EPOCH=1573789584
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libgpg-error
-cp COPYING %{buildroot}/usr/share/package-licenses/libgpg-error/COPYING
-cp COPYING.LIB %{buildroot}/usr/share/package-licenses/libgpg-error/COPYING.LIB
+cp %{_builddir}/libgpg-error-1.36/COPYING %{buildroot}/usr/share/package-licenses/libgpg-error/68c94ffc34f8ad2d7bfae3f5a6b996409211c1b1
+cp %{_builddir}/libgpg-error-1.36/COPYING.LIB %{buildroot}/usr/share/package-licenses/libgpg-error/9a1929f4700d2407c70b507b3b2aaf6226a9543c
 pushd ../build32/
 %make_install32
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
@@ -249,16 +250,16 @@ popd
 /usr/lib32/pkgconfig/32gpg-error.pc
 /usr/lib32/pkgconfig/gpg-error.pc
 
-%files doc
-%defattr(0644,root,root,0755)
-%doc /usr/share/info/*
-
 %files extras
 %defattr(-,root,root,-)
 /usr/share/common-lisp/source/gpg-error/gpg-error-codes.lisp
 /usr/share/common-lisp/source/gpg-error/gpg-error-package.lisp
 /usr/share/common-lisp/source/gpg-error/gpg-error.asd
 /usr/share/common-lisp/source/gpg-error/gpg-error.lisp
+
+%files info
+%defattr(0644,root,root,0755)
+/usr/share/info/gpgrt.info
 
 %files lib
 %defattr(-,root,root,-)
@@ -272,8 +273,8 @@ popd
 
 %files license
 %defattr(0644,root,root,0755)
-/usr/share/package-licenses/libgpg-error/COPYING
-/usr/share/package-licenses/libgpg-error/COPYING.LIB
+/usr/share/package-licenses/libgpg-error/68c94ffc34f8ad2d7bfae3f5a6b996409211c1b1
+/usr/share/package-licenses/libgpg-error/9a1929f4700d2407c70b507b3b2aaf6226a9543c
 
 %files man
 %defattr(0644,root,root,0755)
