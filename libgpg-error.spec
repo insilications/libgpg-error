@@ -6,11 +6,11 @@
 #
 %define keepstatic 1
 Name     : libgpg-error
-Version  : 1.36
-Release  : 46
-URL      : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz
-Source0  : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz
-Source1 : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.36.tar.gz.sig
+Version  : 1.37
+Release  : 47
+URL      : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.37.tar.gz
+Source0  : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.37.tar.gz
+Source1  : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.37.tar.gz.sig
 Summary  : libgpg-error
 Group    : Development/Tools
 License  : GPL-2.0 LGPL-2.0+ LGPL-2.1
@@ -21,19 +21,11 @@ Requires: libgpg-error-lib = %{version}-%{release}
 Requires: libgpg-error-license = %{version}-%{release}
 Requires: libgpg-error-locales = %{version}-%{release}
 Requires: libgpg-error-man = %{version}-%{release}
-BuildRequires : automake
-BuildRequires : automake-dev
 BuildRequires : gcc-dev32
 BuildRequires : gcc-libgcc32
 BuildRequires : gcc-libstdc++32
-BuildRequires : gettext-bin
 BuildRequires : glibc-dev32
 BuildRequires : glibc-libc32
-BuildRequires : libtool
-BuildRequires : libtool-dev
-BuildRequires : m4
-BuildRequires : pkg-config-dev
-Patch1: fix-build.patch
 
 %description
 This is a library that defines common error values for all GnuPG
@@ -162,11 +154,10 @@ staticdev32 components for the libgpg-error package.
 
 
 %prep
-%setup -q -n libgpg-error-1.36
-cd %{_builddir}/libgpg-error-1.36
-%patch1 -p1
+%setup -q -n libgpg-error-1.37
+cd %{_builddir}/libgpg-error-1.37
 pushd ..
-cp -a libgpg-error-1.36 build32
+cp -a libgpg-error-1.37 build32
 popd
 
 %build
@@ -174,7 +165,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1573789584
+export SOURCE_DATE_EPOCH=1581107425
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -183,18 +174,18 @@ export CFLAGS="$CFLAGS -O3 -Os -fdata-sections -ffat-lto-objects -ffunction-sect
 export FCFLAGS="$CFLAGS -O3 -Os -fdata-sections -ffat-lto-objects -ffunction-sections -flto=4 -fno-semantic-interposition "
 export FFLAGS="$CFLAGS -O3 -Os -fdata-sections -ffat-lto-objects -ffunction-sections -flto=4 -fno-semantic-interposition "
 export CXXFLAGS="$CXXFLAGS -O3 -Os -fdata-sections -ffat-lto-objects -ffunction-sections -flto=4 -fno-semantic-interposition "
-%reconfigure  --enable-static
+%configure  --enable-static
 make  %{?_smp_mflags}
+
 pushd ../build32/
 export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 export ASFLAGS="${ASFLAGS}${ASFLAGS:+ }--32"
 export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32 -mstackrealign"
 export CXXFLAGS="${CXXFLAGS}${CXXFLAGS:+ }-m32 -mstackrealign"
 export LDFLAGS="${LDFLAGS}${LDFLAGS:+ }-m32 -mstackrealign"
-%reconfigure  --enable-static  --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
+%configure  --enable-static   --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
 make  %{?_smp_mflags}
 popd
-
 %check
 export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
@@ -205,11 +196,11 @@ cd ../build32;
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1573789584
+export SOURCE_DATE_EPOCH=1581107425
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libgpg-error
-cp %{_builddir}/libgpg-error-1.36/COPYING %{buildroot}/usr/share/package-licenses/libgpg-error/68c94ffc34f8ad2d7bfae3f5a6b996409211c1b1
-cp %{_builddir}/libgpg-error-1.36/COPYING.LIB %{buildroot}/usr/share/package-licenses/libgpg-error/9a1929f4700d2407c70b507b3b2aaf6226a9543c
+cp %{_builddir}/libgpg-error-1.37/COPYING %{buildroot}/usr/share/package-licenses/libgpg-error/68c94ffc34f8ad2d7bfae3f5a6b996409211c1b1
+cp %{_builddir}/libgpg-error-1.37/COPYING.LIB %{buildroot}/usr/share/package-licenses/libgpg-error/9a1929f4700d2407c70b507b3b2aaf6226a9543c
 pushd ../build32/
 %make_install32
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
@@ -264,12 +255,12 @@ popd
 %files lib
 %defattr(-,root,root,-)
 /usr/lib64/libgpg-error.so.0
-/usr/lib64/libgpg-error.so.0.27.0
+/usr/lib64/libgpg-error.so.0.28.0
 
 %files lib32
 %defattr(-,root,root,-)
 /usr/lib32/libgpg-error.so.0
-/usr/lib32/libgpg-error.so.0.27.0
+/usr/lib32/libgpg-error.so.0.28.0
 
 %files license
 %defattr(0644,root,root,0755)
