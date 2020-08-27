@@ -35,6 +35,7 @@ libgpg-error.so.0:gpgrt_check_version
 libgpg-error.so.0:gpgrt_clearerr
 libgpg-error.so.0:gpgrt_clearerr_unlocked
 libgpg-error.so.0:gpgrt_cmp_version
+libgpg-error.so.0:gpgrt_fcancel
 libgpg-error.so.0:gpgrt_fclose
 libgpg-error.so.0:gpgrt_fclose_snatch
 libgpg-error.so.0:gpgrt_fdopen

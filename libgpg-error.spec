@@ -6,11 +6,11 @@
 #
 %define keepstatic 1
 Name     : libgpg-error
-Version  : 1.38
-Release  : 49
-URL      : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.38.tar.gz
-Source0  : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.38.tar.gz
-Source1  : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.38.tar.gz.sig
+Version  : 1.39
+Release  : 50
+URL      : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.39.tar.gz
+Source0  : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.39.tar.gz
+Source1  : https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.39.tar.gz.sig
 Summary  : libgpg-error
 Group    : Development/Tools
 License  : GPL-2.0 LGPL-2.0+ LGPL-2.1
@@ -154,10 +154,10 @@ staticdev32 components for the libgpg-error package.
 
 
 %prep
-%setup -q -n libgpg-error-1.38
-cd %{_builddir}/libgpg-error-1.38
+%setup -q -n libgpg-error-1.39
+cd %{_builddir}/libgpg-error-1.39
 pushd ..
-cp -a libgpg-error-1.38 build32
+cp -a libgpg-error-1.39 build32
 popd
 
 %build
@@ -165,7 +165,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1591649897
+export SOURCE_DATE_EPOCH=1598569616
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -191,16 +191,16 @@ export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-make VERBOSE=1 V=1 %{?_smp_mflags} check
+make %{?_smp_mflags} check
 cd ../build32;
-make VERBOSE=1 V=1 %{?_smp_mflags} check || :
+make %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1591649897
+export SOURCE_DATE_EPOCH=1598569616
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libgpg-error
-cp %{_builddir}/libgpg-error-1.38/COPYING %{buildroot}/usr/share/package-licenses/libgpg-error/68c94ffc34f8ad2d7bfae3f5a6b996409211c1b1
-cp %{_builddir}/libgpg-error-1.38/COPYING.LIB %{buildroot}/usr/share/package-licenses/libgpg-error/9a1929f4700d2407c70b507b3b2aaf6226a9543c
+cp %{_builddir}/libgpg-error-1.39/COPYING %{buildroot}/usr/share/package-licenses/libgpg-error/68c94ffc34f8ad2d7bfae3f5a6b996409211c1b1
+cp %{_builddir}/libgpg-error-1.39/COPYING.LIB %{buildroot}/usr/share/package-licenses/libgpg-error/9a1929f4700d2407c70b507b3b2aaf6226a9543c
 pushd ../build32/
 %make_install32
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
@@ -255,12 +255,12 @@ popd
 %files lib
 %defattr(-,root,root,-)
 /usr/lib64/libgpg-error.so.0
-/usr/lib64/libgpg-error.so.0.29.0
+/usr/lib64/libgpg-error.so.0.30.0
 
 %files lib32
 %defattr(-,root,root,-)
 /usr/lib32/libgpg-error.so.0
-/usr/lib32/libgpg-error.so.0.29.0
+/usr/lib32/libgpg-error.so.0.30.0
 
 %files license
 %defattr(0644,root,root,0755)
