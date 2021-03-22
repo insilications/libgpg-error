@@ -1,21 +1,21 @@
-Configure miss: windres
-Configure miss: strlwr
-Configure miss: direct.h usability
-Configure miss: direct.h presence
 Configure miss: broken alias attribute
-Configure miss: whether readline via "-lreadline" is present and sane
-Configure miss: whether readline via "-lreadline -ltermcap" is present and sane
-Configure miss: whether readline via "-lreadline -lcurses" is present and sane
-Configure miss: whether readline via "-lreadline -lncurses" is present and sane
-Configure miss: whether to enable log_clock
+Configure miss: broken alias attribute
+Configure miss: direct.h presence
+Configure miss: direct.h presence
+Configure miss: direct.h usability
+Configure miss: direct.h usability
 Configure miss: i686-generic-linux-gnu-windres
-Configure miss: windres
 Configure miss: strlwr
-Configure miss: direct.h usability
-Configure miss: direct.h presence
-Configure miss: broken alias attribute
-Configure miss: whether readline via "-lreadline" is present and sane
-Configure miss: whether readline via "-lreadline -ltermcap" is present and sane
+Configure miss: strlwr
+Configure miss: whether readline via "-lreadline -lcurses" is present and sane
 Configure miss: whether readline via "-lreadline -lcurses" is present and sane
 Configure miss: whether readline via "-lreadline -lncurses" is present and sane
+Configure miss: whether readline via "-lreadline -lncurses" is present and sane
+Configure miss: whether readline via "-lreadline -ltermcap" is present and sane
+Configure miss: whether readline via "-lreadline -ltermcap" is present and sane
+Configure miss: whether readline via "-lreadline" is present and sane
+Configure miss: whether readline via "-lreadline" is present and sane
 Configure miss: whether to enable log_clock
+Configure miss: whether to enable log_clock
+Configure miss: windres
+Configure miss: windres
