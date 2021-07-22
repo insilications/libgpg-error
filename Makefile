@@ -1,5 +1,6 @@
 PKG_NAME := libgpg-error
-URL = https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.42.tar.gz
+URL = https://dev.gnupg.org/source/libgpg-error.git
 ARCHIVES = 
+ARCHIVES_GIT = 
 
 include ../common/Makefile.common
