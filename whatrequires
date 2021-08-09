@@ -5,13 +5,16 @@ folks-dev
 gpgme-dev
 gtk-vnc-dev
 libassuan-dev
+libassuan-staticdev
 libgcrypt-dev
 libgcrypt-dev32
+libgcrypt-staticdev
 libgpg-error-dev
 libgpg-error-dev32
 libgpg-error-staticdev
 libgpg-error-staticdev32
 libksba-dev
+libksba-staticdev
 libsecret-dev
 rsyslog
 subversion-dev
