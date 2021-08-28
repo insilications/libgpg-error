@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : libgpg-error
 Version  : 1.42
-Release  : 55
+Release  : 301
 URL      : file:///aot/build/clearlinux/packages/libgpg-error/libgpg-error-v1.42.tar.gz
 Source0  : file:///aot/build/clearlinux/packages/libgpg-error/libgpg-error-v1.42.tar.gz
 Summary  : GPG Runtime
@@ -127,7 +127,7 @@ unset https_proxy
 unset no_proxy
 export SSL_CERT_FILE=/var/cache/ca-certs/anchors/ca-certificates.crt
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1630153508
+export SOURCE_DATE_EPOCH=1630153632
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -255,7 +255,7 @@ cd ../build32;
 make %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1630153508
+export SOURCE_DATE_EPOCH=1630153632
 rm -rf %{buildroot}
 pushd ../build32/
 %make_install32
