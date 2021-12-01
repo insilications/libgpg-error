@@ -1,0 +1,21 @@
+Configure miss: CFLocaleCopyPreferredLanguages
+Configure miss: CFLocaleCopyPreferredLanguages
+Configure miss: broken alias attribute
+Configure miss: broken alias attribute
+Configure miss: gcc options needed to detect all undeclared functions
+Configure miss: gcc options needed to detect all undeclared functions
+Configure miss: i686-generic-linux-gnu-windres
+Configure miss: strlwr
+Configure miss: strlwr
+Configure miss: whether readline via "-lreadline -lcurses" is present and sane
+Configure miss: whether readline via "-lreadline -lcurses" is present and sane
+Configure miss: whether readline via "-lreadline -lncurses" is present and sane
+Configure miss: whether readline via "-lreadline -lncurses" is present and sane
+Configure miss: whether readline via "-lreadline -ltermcap" is present and sane
+Configure miss: whether readline via "-lreadline -ltermcap" is present and sane
+Configure miss: whether readline via "-lreadline" is present and sane
+Configure miss: whether readline via "-lreadline" is present and sane
+Configure miss: whether to enable log_clock
+Configure miss: whether to enable log_clock
+Configure miss: windres
+Configure miss: windres
