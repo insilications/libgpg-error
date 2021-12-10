@@ -75,6 +75,7 @@ libdnf
 libgcrypt
 libgcrypt-dev
 libgcrypt-dev32
+libgcrypt-staticdev
 libgnome-keyring
 libgpg-error-dev
 libgpg-error-dev32
